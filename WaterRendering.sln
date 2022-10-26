@@ -2,6 +2,12 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaterRendering", "WaterRendering\WaterRendering.csproj", "{E02DAEBE-55C6-4C0E-BFE0-83C0CFB8ABA1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGfx", "SharpGfx\SharpGfx\SharpGfx.csproj", "{9B4BFD5A-BDFB-4F00-BD50-5C9604530299}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGfx.OpenTK", "SharpGfx\SharpGfx.OpenTK\SharpGfx.OpenTK.csproj", "{86EAD4D8-A84F-4304-B546-1275770B7ABE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGfx.OpenGL.Shading", "SharpGfx\SharpGfx.OpenGL.Shading\SharpGfx.OpenGL.Shading.csproj", "{7903C6D3-1147-4BB5-B662-D7B12DB1DD49}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -12,5 +18,17 @@ Global
 		{E02DAEBE-55C6-4C0E-BFE0-83C0CFB8ABA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E02DAEBE-55C6-4C0E-BFE0-83C0CFB8ABA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E02DAEBE-55C6-4C0E-BFE0-83C0CFB8ABA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B4BFD5A-BDFB-4F00-BD50-5C9604530299}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B4BFD5A-BDFB-4F00-BD50-5C9604530299}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B4BFD5A-BDFB-4F00-BD50-5C9604530299}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B4BFD5A-BDFB-4F00-BD50-5C9604530299}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86EAD4D8-A84F-4304-B546-1275770B7ABE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86EAD4D8-A84F-4304-B546-1275770B7ABE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86EAD4D8-A84F-4304-B546-1275770B7ABE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86EAD4D8-A84F-4304-B546-1275770B7ABE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7903C6D3-1147-4BB5-B662-D7B12DB1DD49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7903C6D3-1147-4BB5-B662-D7B12DB1DD49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7903C6D3-1147-4BB5-B662-D7B12DB1DD49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7903C6D3-1147-4BB5-B662-D7B12DB1DD49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

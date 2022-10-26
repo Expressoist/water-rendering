@@ -8,7 +8,8 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="SharpGfx.OpenTK" Version="1.2.10" />
+      <ProjectReference Include="..\SharpGfx\SharpGfx.OpenTK\SharpGfx.OpenTK.csproj" />
+      <ProjectReference Include="..\SharpGfx\SharpGfx\SharpGfx.csproj" />
     </ItemGroup>
 
 </Project>
