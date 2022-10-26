@@ -33,6 +33,9 @@ public class RippleRendering : CameraRendering
         : base(device, size, device.Color3(0, 0, 0), camera)
     {
         float[] vertices = GetVerticesOfSurface(NumberOfSubdivisions);
+        var material = new AmbientMaterial(device, device.Color3(0f, 1, 1f), device.Color3(0.8f, 0.2f, 0));
+        
+        _surfaceInstance = device.Object
 
         _device = device;
         _surfaceInstance = (OtkRenderObject)Device.Object
