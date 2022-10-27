@@ -27,12 +27,19 @@ public class RippleRendering : CameraRendering
     {
         float[] vertices = GetVerticesOfSurface(NumberOfSubdivisions);
         var material = new AmbientMaterial(device, device.Color3(0f, 1, 1f), device.Color3(0.8f, 0.2f, 0));
+        // var material = new UniformMaterial(device, device.Color4(1f, 1f, 0.8f, 1f));
+        
+        // Reflectance Material
+        Color3 diffuse = new Color3();
+        Color3 specular = new Color3();
+        float shininess = 0.3f;
+        
+        var reflectance = new Reflectance(diffuse, specular, shininess);
         
         _surfaceInstance = device.Object
         (
             device.World,
             SurfaceInstanceName,
-           // new UniformMaterial(device, device.Color4(1f, 1f, 0.8f, 1f)),
             material,
             new VertexAttribute("positionIn", vertices, 3)
             )
