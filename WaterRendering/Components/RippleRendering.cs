@@ -35,14 +35,12 @@ public class RippleRendering : CameraRendering
         float[] vertices = GetVerticesOfSurface(NumberOfSubdivisions);
         var material = new AmbientMaterial(device, device.Color3(0f, 1, 1f), device.Color3(0.8f, 0.2f, 0));
         
-        _surfaceInstance = device.Object
-
         _device = device;
         _surfaceInstance = (OtkRenderObject)Device.Object
         (
             device.World,
             SurfaceInstanceName,
-            new UniformMaterial(device, device.Color4(1f, 1f, 0.8f, 1f)),
+            material,
             new VertexAttribute("positionIn", vertices, 3)
             );
         
@@ -103,20 +101,5 @@ public class RippleRendering : CameraRendering
         Time++;
         float[] vertices = GetVerticesOfSurface(NumberOfSubdivisions);
         _surfaceInstance.UpdateVertices(new VertexAttribute("positionIn", vertices, 3));
-
-        /*
-        _surfaceInstance = _device.Object
-        (
-            _device.World,
-            SurfaceInstanceName,
-            new UniformMaterial(_device, _device.Color4(1f, 1f, 0.8f, 1f)),
-            new VertexAttribute("positionIn", vertices, 3)
-        );
-        Scene.Add(_surfaceInstance);*/
-
-        //_surfaceInstance.Transform;
-
-        //Time++;
-        //_surfaceInstance.Transform = Device.World.Scale4(1000 / Time);
     }
 }
