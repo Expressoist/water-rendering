@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net6.0</TargetFramework>
+		<Authors>Philipp Kramer</Authors>
+		<Company>OST IFS</Company>
+		<Product>GfxSharp</Product>
+	</PropertyGroup>
+	<PropertyGroup>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<Version>1.2.3</Version>
+	</PropertyGroup>
+</Project>

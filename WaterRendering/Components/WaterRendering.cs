@@ -1,5 +1,6 @@
 using OpenTK.Compute.OpenCL;
 using SharpGfx;
+using SharpGfx.Geometry;
 using SharpGfx.OpenGL.Shading;
 using SharpGfx.OpenTK;
 using SharpGfx.Primitives;
@@ -14,20 +15,56 @@ public abstract class WaterRendering : CameraRendering
     private const int NumberOfSubdivisions = 100;
     private const string SurfaceInstanceName = "WaterRender";
     
+    private const float SmallScale = 0.8f;
+    
     protected WaterRendering(Device device, IVector2 size, Camera camera)
         : base(device, size, device.Color3(0.16f, 0.50f, 0.72f), camera)
     {
         float[] vertices = GetVerticesOfSurface(NumberOfSubdivisions);
         // OpenGlMaterial material = new AmbientMaterial(device, device.Color3(0f, 1, 1f), device.Color3(0.8f, 0.2f, 0));
         OpenGlMaterial material = new UniformMaterial(device, device.Color4(0f, 1, 1f, 1f));
+        
+        // Reflectance Material
+        float shininess = 0.8f;
+
+        //var reflectance = new Reflectance(diffuse, specular, shininess);
+        var world = device.World;
+        var lightPosition = world.Point3(0, -10, -10);
+        var lightSpectrum = new Light(
+            AmbientColor,
+            device.Color3(1f, 1f, 1f),
+            device.Color3(0.90f, 0.90f, 0.70f));
+        
+        var reflectance = new Reflectance(
+            device.Color3(0.0f, 0.0f, 0.4f),
+            device.Color3(0f, 0.1f, 0.2f),
+            32);
+        
+        Material reflectiveMaterial = new PhongMaterial(device, lightPosition, lightSpectrum, reflectance);
+        
+        // Light Point
+        const int rings = 10;
+        var lightVertices = Sphere.GetIsoVertices(rings);
+        var lightMaterial = new UniformMaterial(device, device.Color4(1f, 1f, 1f, 1f));
+        
+        var light = device.Object(
+                device.Model(),
+                "light",
+                lightMaterial,
+                Sphere.GetIsoTriangles(rings),
+                new VertexAttribute("positionIn", lightVertices, 3))
+            .Scale(SmallScale)
+            .Translate(lightPosition.Vector);
+        Scene.Add(light);
 
         _surfaceInstance = (OtkRenderObject) Device.Object
         (
             device.World,
             SurfaceInstanceName,
-            material,
+            reflectiveMaterial,
             GetIndicesOfSurface(NumberOfSubdivisions),
-            new VertexAttribute("positionIn", vertices, 3)
+            new VertexAttribute("positionIn", vertices, 3),
+            new VertexAttribute("normalIn", vertices, 3)
         );
         
         Scene.Add(_surfaceInstance);
@@ -115,6 +152,8 @@ public abstract class WaterRendering : CameraRendering
 
         Time++;
         float[] vertices = GetVerticesOfSurface(NumberOfSubdivisions);
-        _surfaceInstance.UpdateVertices(new VertexAttribute("positionIn", vertices, 3));
+        _surfaceInstance.UpdateVertices(
+            new VertexAttribute("positionIn", vertices, 3),
+            new VertexAttribute("normalIn", vertices, 3));
     }
 }

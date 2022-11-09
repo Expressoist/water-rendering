@@ -21,15 +21,15 @@ public class WaveRendering : WaterRendering
         : base(device, size, camera)
     {
         _floatingInstance = (OtkRenderObject) Plank.Create(device, 1f, 2f, 0.5f);
-        Scene.Add(_floatingInstance);
+        // Scene.Add(_floatingInstance);
     }
 
     protected override void AddVertexAtPosition(List<float> vertices, int x, int y)
     {
         float z = CalculateWaveHeight(x, y);
         vertices.Add(x);
-        vertices.Add(y);
         vertices.Add(z);
+        vertices.Add(y);
     }
 
     private float CalculateWaveHeight(int x, int y)
