@@ -29,21 +29,22 @@ public abstract class WaterRendering : CameraRendering
 
         //var reflectance = new Reflectance(diffuse, specular, shininess);
         var world = device.World;
-        var lightPosition = world.Point3(0, -10, -10);
+        var lightPosition = world.Point3(0, 50, -10);
         var lightSpectrum = new Light(
             AmbientColor,
             device.Color3(1f, 1f, 1f),
             device.Color3(0.90f, 0.90f, 0.70f));
         
         var reflectance = new Reflectance(
-            device.Color3(0.0f, 0.0f, 0.4f),
+            device.Color3(0.0f, 0.5f, 0.4f),
             device.Color3(0f, 0.1f, 0.2f),
             32);
         
         Material reflectiveMaterial = new PhongMaterial(device, lightPosition, lightSpectrum, reflectance);
+        Material ballMaterial = new AmbientMaterial(device, lightPosition, lightSpectrum, reflectance);
         
         // Light Point
-        const int rings = 10;
+        const int rings = 8;
         var lightVertices = Sphere.GetIsoVertices(rings);
         var lightMaterial = new UniformMaterial(device, device.Color4(1f, 1f, 1f, 1f));
         
@@ -52,11 +53,24 @@ public abstract class WaterRendering : CameraRendering
                 "light",
                 lightMaterial,
                 Sphere.GetIsoTriangles(rings),
-                new VertexAttribute("positionIn", lightVertices, 3))
+                new VertexAttribute("positionIn", lightVertices, 10))
             .Scale(SmallScale)
             .Translate(lightPosition.Vector);
         Scene.Add(light);
+        
+        // Create Test object
+        var ballVertices = Sphere.GetIsoVertices(rings);
+        var ball = device.Object(
+            device.World,
+            "ball",
+            ballMaterial,
+            Sphere.GetIsoTriangles(rings),
+            new VertexAttribute("positionIn", ballVertices, 3),
+            new VertexAttribute("normalIn", ballVertices, 3));
 
+        Scene.Add(ball);
+
+        // Create Waves
         _surfaceInstance = (OtkRenderObject) Device.Object
         (
             device.World,
@@ -67,10 +81,9 @@ public abstract class WaterRendering : CameraRendering
             new VertexAttribute("normalIn", vertices, 3)
         );
         
-        Scene.Add(_surfaceInstance);
+        //Scene.Add(_surfaceInstance);
     }
-
-
+    
     private uint[] GetIndicesOfSurface(uint nOfSubdivisions)
     {
         uint nOfSquares = nOfSubdivisions * nOfSubdivisions;
