@@ -40,7 +40,7 @@ public class WaveRendering : WaterRendering
                                    3 / 8f * MathF.Pow(WaveSteepness, 2) * MathF.Cos(3 * omega));
 
         float pseudoRandomX = 0.05f * MathF.Cos(x - 0.06f * Time) + 0.05f * MathF.Cos(x - 0.02f * Time);
-        float pseudoRandomY = 0.05f * MathF.Cos(y - 0.05f * Time);
+        float pseudoRandomY = 0.05f * MathF.Cos(y - 0.05f * Time) + 0.06f * MathF.Cos(y - 0.01f * Time);
         return z + pseudoRandomX + pseudoRandomY;
     }
 
