@@ -27,7 +27,7 @@ public abstract class WaterRendering : CameraRendering
         var lightPosition = device.World.Point3(30, 20, 0);
 
         // Light Point
-        const int rings = 10;
+        const int rings = 8;
         var lightVertices = Sphere.GetIsoVertices(rings);
         var lightMaterial = new UniformMaterial(device, device.Color4(1f, 1f, 1f, 1f));
         
@@ -36,10 +36,20 @@ public abstract class WaterRendering : CameraRendering
                 "light",
                 lightMaterial,
                 Sphere.GetIsoTriangles(rings),
-                new VertexAttribute("positionIn", lightVertices, 3))
+                new VertexAttribute("positionIn", lightVertices, 10))
             .Scale(SmallScale)
             .Translate(lightPosition.Vector);
         Scene.Add(light);
+        
+        // Create Test object
+        var ballVertices = Sphere.GetIsoVertices(rings);
+        var ball = device.Object(
+            device.World,
+            "ball",
+            ballMaterial,
+            Sphere.GetIsoTriangles(rings),
+            new VertexAttribute("positionIn", ballVertices, 3),
+            new VertexAttribute("normalIn", ballVertices, 3));
 
         _device = device;
         var triangles = GetIndicesOfSurface(NumberOfSubdivisions);
@@ -60,6 +70,9 @@ public abstract class WaterRendering : CameraRendering
 
         // WaterMaterial.Create(device, AmbientColor, lightPosition)
 
+        Scene.Add(ball);
+
+        // Create Waves
         _surfaceInstance = (OtkRenderObject) Device.Object
         (
             device.World,
