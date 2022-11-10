@@ -6,7 +6,7 @@ namespace WaterRendering.Components;
 
 public class WaterMaterial {
 
-    public static PhongMaterial Create(Device device, Color3 ambientColor, Point3 lightPosition)
+    public static AmbientMaterial Create(Device device, Color3 ambientColor, Point3 lightPosition)
     {
         var lightSpectrum = new Light(
             ambientColor,
@@ -18,6 +18,6 @@ public class WaterMaterial {
             device.Color3(0f, 0.1f, 0.2f),
             32);
         
-        return new PhongMaterial(device, lightPosition, lightSpectrum, reflectance);
+        return new AmbientMaterial(device, lightPosition, lightSpectrum, reflectance);
     }
 }
