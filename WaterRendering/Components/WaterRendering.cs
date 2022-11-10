@@ -12,39 +12,24 @@ public abstract class WaterRendering : CameraRendering
     protected int Time { get; set; }
     private OtkRenderObject _surfaceInstance;
     
-    private const int NumberOfSubdivisions = 100;
+    private const int NumberOfSubdivisions = 60;
     private const string SurfaceInstanceName = "WaterRender";
     
     private const float SmallScale = 0.8f;
+
+    private Device _device;
     
     protected WaterRendering(Device device, IVector2 size, Camera camera)
         : base(device, size, device.Color3(0.16f, 0.50f, 0.72f), camera)
     {
+        Sky.AddToScene(device, Scene);
+        
         float[] vertices = GetVerticesOfSurface(NumberOfSubdivisions);
-        // OpenGlMaterial material = new AmbientMaterial(device, device.Color3(0f, 1, 1f), device.Color3(0.8f, 0.2f, 0));
-        OpenGlMaterial material = new UniformMaterial(device, device.Color4(0f, 1, 1f, 1f));
         
-        // Reflectance Material
-        float shininess = 0.8f;
+        var lightPosition = device.World.Point3(10, 20, 10);
 
-        //var reflectance = new Reflectance(diffuse, specular, shininess);
-        var world = device.World;
-        var lightPosition = world.Point3(0, 50, -10);
-        var lightSpectrum = new Light(
-            AmbientColor,
-            device.Color3(1f, 1f, 1f),
-            device.Color3(0.90f, 0.90f, 0.70f));
-        
-        var reflectance = new Reflectance(
-            device.Color3(0.0f, 0.5f, 0.4f),
-            device.Color3(0f, 0.1f, 0.2f),
-            32);
-        
-        Material reflectiveMaterial = new PhongMaterial(device, lightPosition, lightSpectrum, reflectance);
-        Material ambientMaterial = new AmbientMaterial(device, lightPosition, lightSpectrum, reflectance);
-        
         // Light Point
-        const int rings = 8;
+        const int rings = 10;
         var lightVertices = Sphere.GetIsoVertices(rings);
         var lightMaterial = new UniformMaterial(device, device.Color4(1f, 1f, 1f, 1f));
         
@@ -63,30 +48,75 @@ public abstract class WaterRendering : CameraRendering
         var ball = device.Object(
             device.World,
             "ball",
-            ambientMaterial,
+            WaterMaterial.Create(device, AmbientColor, lightPosition),
             Sphere.GetIsoTriangles(rings),
             new VertexAttribute("positionIn", ballVertices, 3),
             new VertexAttribute("normalIn", ballVertices, 3));
 
-        Scene.Add(ball);
+        _device = device;
+        var triangles = GetIndicesOfSurface(NumberOfSubdivisions);
+        var normals = GetNormals(device.World, triangles, vertices);
+
+        var test = Tetrahedron.CreateFromPointVectors(vertices, normals, 1);
         
-        // Crate Sky Sphere
-        Sky.AddToScene(device, Scene);
+        /*var test1 = (OtkRenderObject) Device.Object
+        (
+            device.World,
+            "Hello",
+            new UniformMaterial(device, device.Color4(1,1,1,1)),
+            test.Item2,
+            new VertexAttribute("positionIn", test.Item1, 3)
+        );
+        
+        Scene.Add(test1);*/
+
+        // WaterMaterial.Create(device, AmbientColor, lightPosition)
+
+        // Scene.Add(ball);
 
         // Create Waves
         _surfaceInstance = (OtkRenderObject) Device.Object
         (
             device.World,
             SurfaceInstanceName,
-            ambientMaterial,
+            WaterMaterial.Create(device, AmbientColor, lightPosition),
             GetIndicesOfSurface(NumberOfSubdivisions),
             new VertexAttribute("positionIn", vertices, 3),
-            new VertexAttribute("normalIn", vertices, 3)
+            new VertexAttribute("normalIn", normals, 3)
         );
         
-        //Scene.Add(_surfaceInstance);
+        Scene.Add(_surfaceInstance);
     }
-    
+
+
+    private float[] GetNormals(Space space, uint[] indices, float[] vertices)
+    {
+        var normals = new float[vertices.Length];
+        for (var i = 0; i < indices.Length - 3; i += 3)
+        {
+            var a = space.Point3(vertices[indices[i] * 3 + 0], vertices[indices[i] * 3 + 1], vertices[indices[i] * 3 + 2]);
+            var b = space.Point3(vertices[indices[i + 1] * 3 + 0], vertices[indices[i + 1] * 3 + 1], vertices[indices[i + 1] * 3 + 2]);
+            var c = space.Point3(vertices[indices[i + 2] * 3 + 0], vertices[indices[i + 2] * 3 + 1], vertices[indices[i + 2] * 3 + 2]);
+
+            var vectorNormal = IVector3.Cross(a - b, c - b).Normalized();
+
+            normals[indices[i] * 3 + 0] = MathF.Abs(vectorNormal.X);
+            normals[indices[i] * 3 + 1] = MathF.Abs(vectorNormal.Y);
+            normals[indices[i] * 3 + 2] = MathF.Abs(vectorNormal.Z);
+            
+            normals[indices[i + 1] * 3 + 0] = MathF.Abs(vectorNormal.X);
+            normals[indices[i + 1] * 3 + 1] = MathF.Abs(vectorNormal.Y);
+            normals[indices[i + 1] * 3 + 2] = MathF.Abs(vectorNormal.Z);
+            
+            normals[indices[i + 2] * 3 + 0] = MathF.Abs(vectorNormal.X);
+            normals[indices[i + 2] * 3 + 1] = MathF.Abs(vectorNormal.Y);
+            normals[indices[i + 2] * 3 + 2] = MathF.Abs(vectorNormal.Z);
+        }
+
+        return normals;
+    }
+
+
     private uint[] GetIndicesOfSurface(uint nOfSubdivisions)
     {
         uint nOfSquares = nOfSubdivisions * nOfSubdivisions;
@@ -168,8 +198,10 @@ public abstract class WaterRendering : CameraRendering
 
         Time++;
         float[] vertices = GetVerticesOfSurface(NumberOfSubdivisions);
+        var triangles = GetIndicesOfSurface(NumberOfSubdivisions);
+        var normals = GetNormals(_device.World, triangles, vertices);
         _surfaceInstance.UpdateVertices(
             new VertexAttribute("positionIn", vertices, 3),
-            new VertexAttribute("normalIn", vertices, 3));
+            new VertexAttribute("normalIn", normals, 3));
     }
 }

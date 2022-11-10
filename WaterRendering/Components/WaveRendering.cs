@@ -9,7 +9,7 @@ namespace WaterRendering.Components;
 
 public class WaveRendering : WaterRendering
 {
-    private readonly OtkRenderObject _floatingInstance;
+    private readonly List<Plank> _floatingPlanks;
 
     private const float WaveAmplitude = 1;
     private const float WaveLength = 50;
@@ -20,8 +20,13 @@ public class WaveRendering : WaterRendering
     public WaveRendering(Device device, IVector2 size, Camera camera)
         : base(device, size, camera)
     {
-        _floatingInstance = (OtkRenderObject) Plank.Create(device, 1f, 2f, 0.5f);
-        // Scene.Add(_floatingInstance);
+        _floatingPlanks = new List<Plank>
+        {
+            new(device, 2f, device.World.Vector2(2, 2)),
+            new(device, 1f, device.World.Vector2(-1, -1))
+        };
+        
+        _floatingPlanks.ForEach(plank => Scene.Add(plank.RenderObject));
     }
 
     protected override void AddVertexAtPosition(List<float> vertices, int x, int y)
@@ -32,29 +37,30 @@ public class WaveRendering : WaterRendering
         vertices.Add(y);
     }
 
-    private float CalculateWaveHeight(int x, int y)
+    public float CalculateWaveHeight(float x, float y)
     {
         float omega = AngularWaveNumber * x - AngularFrequency * Time;
         float z = WaveAmplitude * ((1 - 1 / 16f * WaveSteepness) * MathF.Cos(omega) +
                                    1 / 2f * WaveSteepness * MathF.Cos(2 * omega) +
                                    3 / 8f * MathF.Pow(WaveSteepness, 2) * MathF.Cos(3 * omega));
 
-        float pseudoRandomX = 0.05f * MathF.Cos(x - 0.06f * Time) + 0.05f * MathF.Cos(x - 0.02f * Time);
-        float pseudoRandomY = 0.05f * MathF.Cos(y - 0.05f * Time);
+        float pseudoRandomX = 0.08f * MathF.Cos(0.5f * x - 0.06f * Time) 
+                              + 0.06f * MathF.Cos(2f * x - 0.04f * Time);
+        
+        
+        float pseudoRandomY = 0.07f * MathF.Cos(0.7f * y - 0.07f * Time) 
+                              + 0.05f * MathF.Cos(1.6f * y - 0.04f * Time);
+        
+        /*float pseudoRandomX = 0.05f * MathF.Cos(x - 0.06f * Time) + 0.05f * MathF.Cos(x - 0.02f * Time);
+        float pseudoRandomY = 0.05f * MathF.Cos(y - 0.05f * Time) + 0.06f * MathF.Cos(y - 0.01f * Time);
+        return z + pseudoRandomX + pseudoRandomY;*/
+
         return z + pseudoRandomX + pseudoRandomY;
     }
 
     public override void OnUpdateFrame()
     {
         base.OnUpdateFrame();
-
-        float z1 = CalculateWaveHeight(0, 0);
-        float z2 = CalculateWaveHeight(1, 0);
-
-        float angle = MathF.Atan(z1 - z2);
-        
-        _floatingInstance.Transform = Device.World.RotationY4(angle) * 
-                                      Device.World.Translation4(Device.World.Vector3(0, 0, z1));
-
+        _floatingPlanks.ForEach(plank => plank.RecalculateFloating(Device, this));
     }
 }
