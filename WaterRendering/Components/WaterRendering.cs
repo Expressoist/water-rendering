@@ -68,7 +68,7 @@ public abstract class WaterRendering : CameraRendering
             new VertexAttribute("positionIn", ballVertices, 3),
             new VertexAttribute("normalIn", ballVertices, 3));
 
-        //Scene.Add(ball);
+        Scene.Add(ball);
         
         // Crate Sky Sphere
         Sky.AddToScene(device, Scene);
