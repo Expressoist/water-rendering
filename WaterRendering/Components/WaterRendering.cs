@@ -41,7 +41,7 @@ public abstract class WaterRendering : CameraRendering
             32);
         
         Material reflectiveMaterial = new PhongMaterial(device, lightPosition, lightSpectrum, reflectance);
-        Material ballMaterial = new AmbientMaterial(device, lightPosition, lightSpectrum, reflectance);
+        Material ambientMaterial = new AmbientMaterial(device, lightPosition, lightSpectrum, reflectance);
         
         // Light Point
         const int rings = 8;
@@ -63,19 +63,22 @@ public abstract class WaterRendering : CameraRendering
         var ball = device.Object(
             device.World,
             "ball",
-            ballMaterial,
+            ambientMaterial,
             Sphere.GetIsoTriangles(rings),
             new VertexAttribute("positionIn", ballVertices, 3),
             new VertexAttribute("normalIn", ballVertices, 3));
 
-        Scene.Add(ball);
+        //Scene.Add(ball);
+        
+        // Crate Sky Sphere
+        Sky.AddToScene(device, Scene);
 
         // Create Waves
         _surfaceInstance = (OtkRenderObject) Device.Object
         (
             device.World,
             SurfaceInstanceName,
-            reflectiveMaterial,
+            ambientMaterial,
             GetIndicesOfSurface(NumberOfSubdivisions),
             new VertexAttribute("positionIn", vertices, 3),
             new VertexAttribute("normalIn", vertices, 3)
