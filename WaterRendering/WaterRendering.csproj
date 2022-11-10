@@ -11,5 +11,23 @@
       <ProjectReference Include="..\SharpGfx\SharpGfx.OpenTK\SharpGfx.OpenTK.csproj" />
       <ProjectReference Include="..\SharpGfx\SharpGfx\SharpGfx.csproj" />
     </ItemGroup>
+    
+    <ItemGroup>
+      <None Remove="Components\Resources\blue-clear.jpg" />
+    </ItemGroup>
+    
+    <ItemGroup>
+      <Content Include="Resources\blue-clear.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Resources\earthmap.jpg" />
+      <Content Include="Resources\earthmap.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Resources\sky1.jpg" />
+      <Content Include="Resources\sky1.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
 
 </Project>
