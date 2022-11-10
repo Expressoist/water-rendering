@@ -22,7 +22,8 @@ public class WaveRendering : WaterRendering
     {
         _floatingPlanks = new List<Plank>
         {
-            new(device, 2f, device.World.Vector2(2, 2))
+            new(device, 2f, device.World.Vector2(2, 2)),
+            new(device, 1f, device.World.Vector2(-1, -1))
         };
         
         _floatingPlanks.ForEach(plank => Scene.Add(plank.RenderObject));
