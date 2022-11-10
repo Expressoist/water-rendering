@@ -28,6 +28,10 @@
       <Content Include="Resources\sky1.jpg">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+      <None Remove="Resources\milky-way-galaxy-night.jpg" />
+      <Content Include="Resources\milky-way-galaxy-night.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>
