@@ -20,6 +20,14 @@
       <Content Include="Resources\blue-clear.jpg">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+      <None Remove="Resources\earthmap.jpg" />
+      <Content Include="Resources\earthmap.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Resources\sky1.jpg" />
+      <Content Include="Resources\sky1.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

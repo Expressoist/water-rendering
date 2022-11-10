@@ -15,7 +15,7 @@ public static class Sky
     public static void AddToScene(Device device, List<RenderObject> scene)
     {
         TextureHandle texture;
-        using (var image = Image.Load<Rgba32>(Path.Combine("Resources", "blue-clear.jpg")))
+        using (var image = Image.Load<Rgba32>(Path.Combine("Resources", "sky1.jpg")))
         {
             texture = device.Texture(image);
         }
