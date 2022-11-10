@@ -12,7 +12,7 @@ public abstract class WaterRendering : CameraRendering
     protected int Time { get; set; }
     private OtkRenderObject _surfaceInstance;
     
-    private const int NumberOfSubdivisions = 50;
+    private const int NumberOfSubdivisions = 60;
     private const string SurfaceInstanceName = "WaterRender";
     
     private const float SmallScale = 0.8f;
@@ -22,6 +22,8 @@ public abstract class WaterRendering : CameraRendering
     protected WaterRendering(Device device, IVector2 size, Camera camera)
         : base(device, size, device.Color3(0.16f, 0.50f, 0.72f), camera)
     {
+        Sky.AddToScene(device, Scene);
+        
         float[] vertices = GetVerticesOfSurface(NumberOfSubdivisions);
         
         var lightPosition = device.World.Point3(10, 20, 10);

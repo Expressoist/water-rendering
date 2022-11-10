@@ -63,7 +63,7 @@ public class AmbientMaterial : OpenGlMaterial
                 float intensity = pow(max(dot(cameraDir, reflectDir), 0.0), material.shininess);
                 vec3 specular = intensity * light.specular * material.specular;
 
-	            fragColor = vec4(ambient + diffuse + specular, 0.8);
+	            fragColor = vec4(ambient + diffuse + specular, 1);
             }";
 
     private static readonly string VertexShader = Resources.GetSource("basic.vert");
