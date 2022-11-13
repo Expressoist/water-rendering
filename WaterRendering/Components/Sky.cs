@@ -28,7 +28,7 @@ public static class Sky
             Sphere.GetTriangles(Resolution, Resolution),
             new VertexAttribute("positionIn", Sphere.GetVertices(Resolution, Resolution), 3),
             new VertexAttribute("texCoordIn", GetTextureCoordinates(Resolution, Resolution), 2)
-        ).Scale(30).RotateX(MathF.PI / 2).Translate(device.World.Vector3(0, 0, 0));
+        ).Scale(55).RotateX(MathF.PI / 2);
         
         scene.Add(skySphere);
     }

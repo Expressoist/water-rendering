@@ -14,7 +14,7 @@ public class WaterMaterial {
             device.Color3(0.90f, 0.90f, 0.70f));
         
         var reflectance = new Reflectance(
-            device.Color3(0.0f, 0.0f, 0.4f),
+            device.Color3(0.1f, 0.3f, 0.8f),
             device.Color3(0f, 0.1f, 0.2f),
             32);
         

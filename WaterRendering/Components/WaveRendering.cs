@@ -47,13 +47,8 @@ public class WaveRendering : WaterRendering
         float pseudoRandomX = 0.08f * MathF.Cos(0.5f * x - 0.06f * Time) 
                               + 0.06f * MathF.Cos(2f * x - 0.04f * Time);
         
-        
         float pseudoRandomY = 0.07f * MathF.Cos(0.7f * y - 0.07f * Time) 
                               + 0.05f * MathF.Cos(1.6f * y - 0.04f * Time);
-        
-        /*float pseudoRandomX = 0.05f * MathF.Cos(x - 0.06f * Time) + 0.05f * MathF.Cos(x - 0.02f * Time);
-        float pseudoRandomY = 0.05f * MathF.Cos(y - 0.05f * Time) + 0.06f * MathF.Cos(y - 0.01f * Time);
-        return z + pseudoRandomX + pseudoRandomY;*/
 
         return z + pseudoRandomX + pseudoRandomY;
     }
