@@ -31,10 +31,12 @@ public class Plank
     
     private static RenderObject CreateRenderObject(Device device, float scale, IVector2 translation)
     {
+        AmbientMaterial phongMaterial = WaterMaterial.Create()
         OpenGlMaterial material = new UniformMaterial(device, device.Color4(0.73f, 0.55f, 0.38f, 1f));
         var instance = device.Object
         (
-            device.World,
+            //device.World,
+            device.Model(),
             PlankInstanceName,
             material,
             Cube.Triangles,
