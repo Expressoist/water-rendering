@@ -10,9 +10,16 @@ namespace WaterRendering.Components;
 public abstract class WaterRendering : CameraRendering
 {
     protected int Time { get; set; }
+    
+    private float[] Vertices { get; set; }
+    private uint[] Faces { get; set; }
+    private float[] Normals { get; set; }
+    
+    
     private OtkRenderObject _surfaceInstance;
     
     private const int NumberOfSubdivisions = 60;
+    private const int SurfaceScaleFactor = 2;
     private const string SurfaceInstanceName = "WaterRender";
     
     private const float SmallScale = 0.8f;
@@ -23,9 +30,15 @@ public abstract class WaterRendering : CameraRendering
         : base(device, size, device.Color3(0.16f, 0.50f, 0.72f), camera)
     {
         Sky.AddToScene(device, Scene);
+<<<<<<< HEAD
         
         float[] vertices = GetVerticesOfSurface(NumberOfSubdivisions);
         
+=======
+
+        var lightPosition = device.World.Point3(-20, 20, 20);
+
+>>>>>>> main
         // Light Point
         var lightPosition = device.World.Point3(0, 20, 10);
         const int rings = 8;
@@ -43,6 +56,7 @@ public abstract class WaterRendering : CameraRendering
         Scene.Add(light);
         
         _device = device;
+<<<<<<< HEAD
         var triangles = GetIndicesOfSurface(NumberOfSubdivisions);
         var normals = GetNormals(device.World, triangles, vertices);
         
@@ -60,21 +74,28 @@ public abstract class WaterRendering : CameraRendering
         Scene.Add(test1);*/
         
         // Create Waves
+=======
+        
+        Vertices = CalculateVertices(NumberOfSubdivisions);
+        Faces = CalculateFaces(NumberOfSubdivisions);
+        Normals = CalculateNormals(device.World, Faces, Vertices);
+
+>>>>>>> main
         _surfaceInstance = (OtkRenderObject) Device.Object
         (
             device.World,
             SurfaceInstanceName,
             WaterMaterial.Create(device, AmbientColor, lightPosition),
-            GetIndicesOfSurface(NumberOfSubdivisions),
-            new VertexAttribute("positionIn", vertices, 3),
-            new VertexAttribute("normalIn", normals, 3)
+            CalculateFaces(NumberOfSubdivisions),
+            new VertexAttribute("positionIn", Vertices, 3),
+            new VertexAttribute("normalIn", Normals, 3)
         );
         
         Scene.Add(_surfaceInstance);
     }
 
 
-    private float[] GetNormals(Space space, uint[] indices, float[] vertices)
+    private float[] CalculateNormals(Space space, uint[] indices, float[] vertices)
     {
         var normals = new float[vertices.Length];
         for (var i = 0; i < indices.Length - 3; i += 3)
@@ -102,10 +123,10 @@ public abstract class WaterRendering : CameraRendering
     }
 
 
-    private uint[] GetIndicesOfSurface(uint nOfSubdivisions)
+    private uint[] CalculateFaces(uint nOfSubdivisions)
     {
         uint nOfSquares = nOfSubdivisions * nOfSubdivisions;
-        var indices = new uint[nOfSquares * 6];
+        var faces = new uint[nOfSquares * 6];
         var i = 0;
         var nOfPoints = (nOfSubdivisions + 1);
         
@@ -116,39 +137,39 @@ public abstract class WaterRendering : CameraRendering
                 //  0 - *
                 //  | \ |
                 //  * - *
-                indices[i++] = nOfPoints * row + column;
+                faces[i++] = nOfPoints * row + column;
             
                 //  * - 0
                 //  | \ |
                 //  * - *
-                indices[i++] = nOfPoints * row + (column + 1);
+                faces[i++] = nOfPoints * row + (column + 1);
             
                 //  * - *
                 //  | \ |
                 //  * - 0
-                indices[i++] = nOfPoints * (row + 1) + (column + 1);
+                faces[i++] = nOfPoints * (row + 1) + (column + 1);
             
                 //  0 - *
                 //  | \ |
                 //  * - *
-                indices[i++] = nOfPoints * row + column;
+                faces[i++] = nOfPoints * row + column;
             
                 //  * - *
                 //  | \ |
                 //  0 - *
-                indices[i++] = nOfPoints * (row + 1) + column;
+                faces[i++] = nOfPoints * (row + 1) + column;
             
                 //  * - *
                 //  | \ |
                 //  * - 0
-                indices[i++] = nOfPoints * (row + 1) + (column + 1);
+                faces[i++] = nOfPoints * (row + 1) + (column + 1);
             }
         }
 
-        return indices;
+        return faces;
     }
     
-    private float[] GetVerticesOfSurface(int nOfSubdivisions)
+    private float[] CalculateVertices(int nOfSubdivisions)
     {
         var vertices = new List<float>();
         int offset = nOfSubdivisions / 2;
@@ -157,22 +178,11 @@ public abstract class WaterRendering : CameraRendering
         {
             for (var y = 0; y <= nOfSubdivisions; y++)
             {
-                AddVertexAtPosition(vertices, x - offset, y - offset);
+                AddVertexAtPosition(vertices, (x - offset) * SurfaceScaleFactor, (y - offset) * SurfaceScaleFactor);
             }
         }
         
         return vertices.ToArray();
-    }
-    
-    private void AddSquareAtPosition(ref List<float> vertices, int x, int y)
-    {
-        AddVertexAtPosition(vertices, x, y);
-        AddVertexAtPosition(vertices, x + 1, y);
-        AddVertexAtPosition(vertices, x, y + 1);
-        
-        AddVertexAtPosition(vertices, x + 1, y + 1);
-        AddVertexAtPosition(vertices, x + 1, y);
-        AddVertexAtPosition(vertices, x, y + 1);
     }
 
     protected abstract void AddVertexAtPosition(List<float> vertices, int x, int y);
@@ -182,11 +192,10 @@ public abstract class WaterRendering : CameraRendering
         base.OnUpdateFrame();
 
         Time++;
-        float[] vertices = GetVerticesOfSurface(NumberOfSubdivisions);
-        var triangles = GetIndicesOfSurface(NumberOfSubdivisions);
-        var normals = GetNormals(_device.World, triangles, vertices);
+        Vertices = CalculateVertices(NumberOfSubdivisions);
+        Normals = CalculateNormals(_device.World, Faces, Vertices);
         _surfaceInstance.UpdateVertices(
-            new VertexAttribute("positionIn", vertices, 3),
-            new VertexAttribute("normalIn", normals, 3));
+            new VertexAttribute("positionIn", Vertices, 3),
+            new VertexAttribute("normalIn", Normals, 3));
     }
 }
