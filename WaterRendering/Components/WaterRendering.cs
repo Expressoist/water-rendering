@@ -30,15 +30,8 @@ public abstract class WaterRendering : CameraRendering
         : base(device, size, device.Color3(0.16f, 0.50f, 0.72f), camera)
     {
         Sky.AddToScene(device, Scene);
-<<<<<<< HEAD
-        
-        float[] vertices = GetVerticesOfSurface(NumberOfSubdivisions);
-        
-=======
+        uint[] vertices = CalculateFaces(NumberOfSubdivisions);
 
-        var lightPosition = device.World.Point3(-20, 20, 20);
-
->>>>>>> main
         // Light Point
         var lightPosition = device.World.Point3(0, 20, 10);
         const int rings = 8;
@@ -56,31 +49,14 @@ public abstract class WaterRendering : CameraRendering
         Scene.Add(light);
         
         _device = device;
-<<<<<<< HEAD
-        var triangles = GetIndicesOfSurface(NumberOfSubdivisions);
-        var normals = GetNormals(device.World, triangles, vertices);
-        
-        // var test = Tetrahedron.CreateFromPointVectors(vertices, normals, 1);
-        
-        /*var test1 = (OtkRenderObject) Device.Object
-        (
-            device.World,
-            "Hello",
-            new UniformMaterial(device, device.Color4(1,1,1,1)),
-            test.Item2,
-            new VertexAttribute("positionIn", test.Item1, 3)
-        );
-        
-        Scene.Add(test1);*/
+        var triangles = CalculateFaces(NumberOfSubdivisions);
+        var normals = CalculateNormals(device.World, triangles, vertices);
         
         // Create Waves
-=======
-        
         Vertices = CalculateVertices(NumberOfSubdivisions);
         Faces = CalculateFaces(NumberOfSubdivisions);
         Normals = CalculateNormals(device.World, Faces, Vertices);
-
->>>>>>> main
+        
         _surfaceInstance = (OtkRenderObject) Device.Object
         (
             device.World,
