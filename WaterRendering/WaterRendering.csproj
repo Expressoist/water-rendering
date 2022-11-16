@@ -32,6 +32,10 @@
       <Content Include="Resources\milky-way-galaxy-night.jpg">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
+      <None Remove="Resources\table.jpg" />
+      <Content Include="Resources\table.jpg">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

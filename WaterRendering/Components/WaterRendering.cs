@@ -16,25 +16,23 @@ public abstract class WaterRendering : CameraRendering
     private float[] Normals { get; set; }
     
     
-    private OtkRenderObject _surfaceInstance;
+    private readonly OtkRenderObject _surfaceInstance;
+    private readonly Device _device;
     
     private const int NumberOfSubdivisions = 60;
     private const int SurfaceScaleFactor = 2;
     private const string SurfaceInstanceName = "WaterRender";
-    
     private const float SmallScale = 0.8f;
-
-    private Device _device;
     
     protected WaterRendering(Device device, IVector2 size, Camera camera)
         : base(device, size, device.Color3(0.16f, 0.50f, 0.72f), camera)
     {
         Sky.AddToScene(device, Scene);
-        uint[] vertices = CalculateFaces(NumberOfSubdivisions);
+
+        var lightPosition = device.World.Point3(-20, 20, 20);
 
         // Light Point
-        var lightPosition = device.World.Point3(0, 20, 10);
-        const int rings = 8;
+        const int rings = 10;
         var lightVertices = Sphere.GetIsoVertices(rings);
         var lightMaterial = new UniformMaterial(device, device.Color4(1f, 1f, 1f, 1f));
         
@@ -43,20 +41,27 @@ public abstract class WaterRendering : CameraRendering
                 "light",
                 lightMaterial,
                 Sphere.GetIsoTriangles(rings),
-                new VertexAttribute("positionIn", lightVertices, 3))
+                new VertexAttribute("positionIn", lightVertices, 10))
             .Scale(SmallScale)
             .Translate(lightPosition.Vector);
         Scene.Add(light);
         
+        // Create Test object
+        // var ballVertices = Sphere.GetIsoVertices(rings);
+        // var ball = device.Object(
+        //     device.World,
+        //     "ball",
+        //     WaterMaterial.Create(device, AmbientColor, lightPosition),
+        //     Sphere.GetIsoTriangles(rings),
+        //     new VertexAttribute("positionIn", ballVertices, 3),
+        //     new VertexAttribute("normalIn", ballVertices, 3));
+
         _device = device;
-        var triangles = CalculateFaces(NumberOfSubdivisions);
-        var normals = CalculateNormals(device.World, triangles, vertices);
         
-        // Create Waves
         Vertices = CalculateVertices(NumberOfSubdivisions);
         Faces = CalculateFaces(NumberOfSubdivisions);
         Normals = CalculateNormals(device.World, Faces, Vertices);
-        
+
         _surfaceInstance = (OtkRenderObject) Device.Object
         (
             device.World,
