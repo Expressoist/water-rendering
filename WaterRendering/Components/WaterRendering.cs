@@ -10,7 +10,8 @@ namespace WaterRendering.Components;
 public abstract class WaterRendering : CameraRendering
 {
     protected int Time { get; set; }
-    
+    protected Point3 LightPosition { get; set; }
+
     private float[] Vertices { get; set; }
     private uint[] Faces { get; set; }
     private float[] Normals { get; set; }
@@ -29,7 +30,7 @@ public abstract class WaterRendering : CameraRendering
     {
         Sky.AddToScene(device, Scene);
 
-        var lightPosition = device.World.Point3(-20, 20, 20);
+        LightPosition = device.World.Point3(-20, 20, 20);
 
         // Light Point
         const int rings = 10;
@@ -43,19 +44,10 @@ public abstract class WaterRendering : CameraRendering
                 Sphere.GetIsoTriangles(rings),
                 new VertexAttribute("positionIn", lightVertices, 10))
             .Scale(SmallScale)
-            .Translate(lightPosition.Vector);
+            .Translate(LightPosition.Vector);
         Scene.Add(light);
-        
-        // Create Test object
-        // var ballVertices = Sphere.GetIsoVertices(rings);
-        // var ball = device.Object(
-        //     device.World,
-        //     "ball",
-        //     WaterMaterial.Create(device, AmbientColor, lightPosition),
-        //     Sphere.GetIsoTriangles(rings),
-        //     new VertexAttribute("positionIn", ballVertices, 3),
-        //     new VertexAttribute("normalIn", ballVertices, 3));
 
+        // Create Water
         _device = device;
         
         Vertices = CalculateVertices(NumberOfSubdivisions);
@@ -66,7 +58,7 @@ public abstract class WaterRendering : CameraRendering
         (
             device.World,
             SurfaceInstanceName,
-            WaterMaterial.Create(device, AmbientColor, lightPosition),
+            WaterMaterial.Create(device, AmbientColor, LightPosition),
             CalculateFaces(NumberOfSubdivisions),
             new VertexAttribute("positionIn", Vertices, 3),
             new VertexAttribute("normalIn", Normals, 3)
