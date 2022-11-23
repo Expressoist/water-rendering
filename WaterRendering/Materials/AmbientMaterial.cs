@@ -21,7 +21,7 @@ public class AmbientMaterial : OpenGlMaterial
             vec3 fragColor3 = ambient * objectColor; 
             fragColor = vec4(fragColor3, 0.3);
           }";
-     
+
      private const string PhongFragShader = @"
           #version 410
 
@@ -66,7 +66,7 @@ public class AmbientMaterial : OpenGlMaterial
 	            fragColor = vec4(ambient + diffuse + specular, 0.5);
             }";
 
-    private static readonly string VertexShader = Resources.GetSource("basic.vert");
+     private static readonly string VertexShader = Resources.GetSource("basic.vert");
     private static readonly string PhongVertexShader = Resources.GetSource("normal_lighting.vert");
 
     public AmbientMaterial(
@@ -96,9 +96,8 @@ public class AmbientMaterial : OpenGlMaterial
              device, 
              PhongVertexShader, 
              PhongFragShader)
-     {
+    {
          Transparent = true;
-         var transparency = 0.1f;
          
          // all variables with 'uniform' in the FragShader need to be passed here
          DoInContext(() =>

@@ -24,11 +24,11 @@ public class WaveRendering : WaterRendering
     {
         _floatingPlanks = new List<Plank>
         {
-            new(device, 2f, device.World.Vector2(2, 2)),
-            new(device, 1f, device.World.Vector2(-1, -1))
+            new(device, 2f, device.World.Vector2(2, 2), AmbientColor, LightPosition),
+            new(device, 1f, device.World.Vector2(-1, -1), AmbientColor, LightPosition)
         };
         
-        _floatingPlanks.ForEach(plank => Scene.Add(plank.RenderObject));
+        _floatingPlanks.ForEach(plank => Scene.Insert(1, plank.RenderObject)); // Really ugly fix
     }
 
     protected override void AddVertexAtPosition(float[] vertices, int x, int y, int index)

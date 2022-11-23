@@ -54,6 +54,8 @@
 		<EmbeddedResource Include="Sources\normal_lighting.vert" />
 		<EmbeddedResource Include="Sources\shadow_texture.vert" />
 		<EmbeddedResource Include="Sources\vertex_color.vert" />
+		<None Remove="Sources\texture_normal_lighting.vert" />
+		<EmbeddedResource Include="Sources\texture_normal_lighting.vert" />
 	</ItemGroup>
 
 	<ItemGroup>
