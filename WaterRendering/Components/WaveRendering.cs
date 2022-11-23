@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Concurrent;
 using OpenTK.Mathematics;
 using SharpGfx;
 using SharpGfx.Host;
@@ -29,12 +31,12 @@ public class WaveRendering : WaterRendering
         _floatingPlanks.ForEach(plank => Scene.Add(plank.RenderObject));
     }
 
-    protected override void AddVertexAtPosition(List<float> vertices, int x, int y)
+    protected override void AddVertexAtPosition(float[] vertices, int x, int y, int index)
     {
         float z = CalculateWaveHeight(x, y);
-        vertices.Add(x);
-        vertices.Add(z);
-        vertices.Add(y);
+        vertices[index] = x;
+        vertices[index + 1] = z;
+        vertices[index + 2] = y;
     }
 
     public float CalculateWaveHeight(float x, float y)

@@ -1,3 +1,5 @@
+using System.Collections;
+using System.Collections.Concurrent;
 using OpenTK.Compute.OpenCL;
 using SharpGfx;
 using SharpGfx.Geometry;
@@ -11,15 +13,17 @@ public abstract class WaterRendering : CameraRendering
 {
     protected int Time { get; set; }
     
-    private float[] Vertices { get; set; }
-    private uint[] Faces { get; set; }
-    private float[] Normals { get; set; }
-    
+    private float[] Vertices { get; } = new float[NumberOfPoints * NumberOfPoints * 3];
+    private uint[] Faces { get; } = new uint[NumberOfSquares * 6];
+    private float[] Normals { get; } = new float[NumberOfPoints * NumberOfPoints * 3];
     
     private readonly OtkRenderObject _surfaceInstance;
     private readonly Device _device;
     
     private const int NumberOfSubdivisions = 60;
+    private const int NumberOfPoints = NumberOfSubdivisions + 1;
+    private const int NumberOfSquares = NumberOfSubdivisions * NumberOfSubdivisions;
+
     private const int SurfaceScaleFactor = 2;
     private const string SurfaceInstanceName = "WaterRender";
     private const float SmallScale = 0.8f;
@@ -57,17 +61,16 @@ public abstract class WaterRendering : CameraRendering
         //     new VertexAttribute("normalIn", ballVertices, 3));
 
         _device = device;
-        
-        Vertices = CalculateVertices(NumberOfSubdivisions);
-        Faces = CalculateFaces(NumberOfSubdivisions);
-        Normals = CalculateNormals(device.World, Faces, Vertices);
+        CalculateVertices(Vertices);
+        CalculateFaces(Faces);
+        CalculateNormals(device.World, Faces, Vertices, Normals);
 
         _surfaceInstance = (OtkRenderObject) Device.Object
         (
             device.World,
             SurfaceInstanceName,
             WaterMaterial.Create(device, AmbientColor, lightPosition),
-            CalculateFaces(NumberOfSubdivisions),
+            Faces,
             new VertexAttribute("positionIn", Vertices, 3),
             new VertexAttribute("normalIn", Normals, 3)
         );
@@ -76,105 +79,93 @@ public abstract class WaterRendering : CameraRendering
     }
 
 
-    private float[] CalculateNormals(Space space, uint[] indices, float[] vertices)
+    private void CalculateNormals(Space space, uint[] faces, float[] vertices, float[] outArray)
     {
-        var normals = new float[vertices.Length];
-        for (var i = 0; i < indices.Length - 3; i += 3)
+        for (var i = 0; i < faces.Length - 3; i += 3)
         {
-            var a = space.Point3(vertices[indices[i] * 3 + 0], vertices[indices[i] * 3 + 1], vertices[indices[i] * 3 + 2]);
-            var b = space.Point3(vertices[indices[i + 1] * 3 + 0], vertices[indices[i + 1] * 3 + 1], vertices[indices[i + 1] * 3 + 2]);
-            var c = space.Point3(vertices[indices[i + 2] * 3 + 0], vertices[indices[i + 2] * 3 + 1], vertices[indices[i + 2] * 3 + 2]);
+            var a = space.Point3(vertices[faces[i] * 3 + 0], vertices[faces[i] * 3 + 1], vertices[faces[i] * 3 + 2]);
+            var b = space.Point3(vertices[faces[i + 1] * 3 + 0], vertices[faces[i + 1] * 3 + 1], vertices[faces[i + 1] * 3 + 2]);
+            var c = space.Point3(vertices[faces[i + 2] * 3 + 0], vertices[faces[i + 2] * 3 + 1], vertices[faces[i + 2] * 3 + 2]);
 
             var vectorNormal = IVector3.Cross(a - b, c - b).Normalized();
 
-            normals[indices[i] * 3 + 0] = MathF.Abs(vectorNormal.X);
-            normals[indices[i] * 3 + 1] = MathF.Abs(vectorNormal.Y);
-            normals[indices[i] * 3 + 2] = MathF.Abs(vectorNormal.Z);
+            outArray[faces[i] * 3 + 0] = MathF.Abs(vectorNormal.X);
+            outArray[faces[i] * 3 + 1] = MathF.Abs(vectorNormal.Y);
+            outArray[faces[i] * 3 + 2] = MathF.Abs(vectorNormal.Z);
             
-            normals[indices[i + 1] * 3 + 0] = MathF.Abs(vectorNormal.X);
-            normals[indices[i + 1] * 3 + 1] = MathF.Abs(vectorNormal.Y);
-            normals[indices[i + 1] * 3 + 2] = MathF.Abs(vectorNormal.Z);
+            outArray[faces[i + 1] * 3 + 0] = MathF.Abs(vectorNormal.X);
+            outArray[faces[i + 1] * 3 + 1] = MathF.Abs(vectorNormal.Y);
+            outArray[faces[i + 1] * 3 + 2] = MathF.Abs(vectorNormal.Z);
             
-            normals[indices[i + 2] * 3 + 0] = MathF.Abs(vectorNormal.X);
-            normals[indices[i + 2] * 3 + 1] = MathF.Abs(vectorNormal.Y);
-            normals[indices[i + 2] * 3 + 2] = MathF.Abs(vectorNormal.Z);
+            outArray[faces[i + 2] * 3 + 0] = MathF.Abs(vectorNormal.X);
+            outArray[faces[i + 2] * 3 + 1] = MathF.Abs(vectorNormal.Y);
+            outArray[faces[i + 2] * 3 + 2] = MathF.Abs(vectorNormal.Z);
         }
-
-        return normals;
     }
 
 
-    private uint[] CalculateFaces(uint nOfSubdivisions)
+    private void CalculateFaces(uint[] outArray)
     {
-        uint nOfSquares = nOfSubdivisions * nOfSubdivisions;
-        var faces = new uint[nOfSquares * 6];
         var i = 0;
-        var nOfPoints = (nOfSubdivisions + 1);
-        
-        for (uint row = 0; row < nOfSubdivisions; row++)
+        for (uint row = 0; row < NumberOfSubdivisions; row++)
         {
-            for (uint column = 0; column < nOfSubdivisions; column++)
+            for (uint column = 0; column < NumberOfSubdivisions; column++)
             {
                 //  0 - *
                 //  | \ |
                 //  * - *
-                faces[i++] = nOfPoints * row + column;
+                outArray[i++] = NumberOfPoints * row + column;
             
                 //  * - 0
                 //  | \ |
                 //  * - *
-                faces[i++] = nOfPoints * row + (column + 1);
+                outArray[i++] = NumberOfPoints * row + (column + 1);
             
                 //  * - *
                 //  | \ |
                 //  * - 0
-                faces[i++] = nOfPoints * (row + 1) + (column + 1);
+                outArray[i++] = NumberOfPoints * (row + 1) + (column + 1);
             
                 //  0 - *
                 //  | \ |
                 //  * - *
-                faces[i++] = nOfPoints * row + column;
+                outArray[i++] = NumberOfPoints * row + column;
             
                 //  * - *
                 //  | \ |
                 //  0 - *
-                faces[i++] = nOfPoints * (row + 1) + column;
+                outArray[i++] = NumberOfPoints * (row + 1) + column;
             
                 //  * - *
                 //  | \ |
                 //  * - 0
-                faces[i++] = nOfPoints * (row + 1) + (column + 1);
+                outArray[i++] = NumberOfPoints * (row + 1) + (column + 1);
             }
         }
-
-        return faces;
     }
     
-    private float[] CalculateVertices(int nOfSubdivisions)
+    private void CalculateVertices(float[] outArray)
     {
-        var vertices = new List<float>();
-        int offset = nOfSubdivisions / 2;
-        
-        for (var x = 0; x <= nOfSubdivisions; x++)
+        const int offset = NumberOfSubdivisions / 2;
+        for (var x = 0; x <= NumberOfSubdivisions; x++)
         {
-            for (var y = 0; y <= nOfSubdivisions; y++)
+            for (var y = 0; y <= NumberOfSubdivisions; y++)
             {
-                AddVertexAtPosition(vertices, (x - offset) * SurfaceScaleFactor, (y - offset) * SurfaceScaleFactor);
+                int index = 3 * (y + NumberOfPoints * x);
+                AddVertexAtPosition(outArray, (x - offset) * SurfaceScaleFactor, (y - offset) * SurfaceScaleFactor, index);
             }
         }
-        
-        return vertices.ToArray();
     }
 
-    protected abstract void AddVertexAtPosition(List<float> vertices, int x, int y);
+    protected abstract void AddVertexAtPosition(float[] vertices, int x, int y, int index);
 
     public override void OnUpdateFrame()
     {
         base.OnUpdateFrame();
 
         Time++;
-        Vertices = CalculateVertices(NumberOfSubdivisions);
-        Normals = CalculateNormals(_device.World, Faces, Vertices);
+        CalculateVertices(Vertices);
+        CalculateNormals(_device.World, Faces, Vertices, Normals);
         _surfaceInstance.UpdateVertices(
             new VertexAttribute("positionIn", Vertices, 3),
             new VertexAttribute("normalIn", Normals, 3));
