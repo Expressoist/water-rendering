@@ -63,6 +63,6 @@ public class WaveRendering : WaterRendering
     public override void OnUpdateFrame()
     {
         base.OnUpdateFrame();
-        _floatingPlanks.ForEach(plank => plank.RecalculateFloating(Device, this));
+        _floatingPlanks.ForEach(plank => plank.UpdateFloatingTransformation(Device, this));
     }
 }

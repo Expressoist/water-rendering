@@ -15,13 +15,14 @@ public class Box
 {
     private const string PlankInstanceName = "Plank";
 
-    public RenderObject RenderObject { get; }
-    const int TextureUnit = 0;
-
-    private float _scale;
-    private IVector2 _translation;
-    private IVector2 _startPosition;
-    private IVector2 _endPosition;
+    public readonly RenderObject RenderObject;
+    
+    private readonly float _scale;
+    private readonly IVector2 _translation;
+    private readonly IVector2 _startPosition;
+    private readonly IVector2 _endPosition;
+    
+    private static readonly string Texture = Path.Combine("Resources", "wooden_chest.jpg");
 
     public Box(Device device, float scale, IVector2 translation, Color3 ambientColor, Point3 lightPosition)
     {
@@ -34,25 +35,22 @@ public class Box
 
     private static RenderObject CreateRenderObject(Device device, float scale, IVector2 translation, Color3 ambientColor, Point3 lightPosition)
     {
-        var phongMaterial = GetMaterial(device, ambientColor, lightPosition);
-
-        var instance = device.Object
+        var renderObject = device.Object
         (
             device.Model(),
             PlankInstanceName,
-            phongMaterial,
+            GetMaterial(device, ambientColor, lightPosition),
             Cube.SeparateTriangles,
             new VertexAttribute("positionIn", Cube.Vertices, 3),
             new VertexAttribute("texCoordIn", Cube.TextureCoordinates, 2),
             new VertexAttribute("normalIn", Cube.Normals, 3)
         );
-
-        instance.Scale(scale);
-        instance.Translate(device.World.Vector3(translation.X, 0, translation.X));
-        return instance;
+        renderObject.Scale(scale);
+        renderObject.Translate(device.World.Vector3(translation.X, 0, translation.X));
+        return renderObject;
     }
 
-    public void RecalculateFloating(Device device, WaveRendering waveRendering)
+    public void UpdateFloatingTransformation(Device device, WaveRendering waveRendering)
     {
         float a = waveRendering.CalculateWaveHeight(_startPosition.X, _startPosition.Y);
         float b = waveRendering.CalculateWaveHeight(_endPosition.X, _endPosition.Y);
@@ -69,11 +67,8 @@ public class Box
 
     private static PhongWithTextureMaterial GetMaterial(Device device, Color3 ambientColor, Point3 lightPosition)
     {
-        TextureHandle woodTexture;
-        using var image = Image.Load<Rgba32>(Path.Combine("Resources", "wooden_chest.jpg"));
-        {
-            woodTexture = device.Texture(image);
-        }
+        using var image = Image.Load<Rgba32>(Texture);
+        TextureHandle woodTexture = device.Texture(image);
         
         var lightSpectrum = new Light(
             ambientColor,
@@ -85,6 +80,6 @@ public class Box
             device.Color3(0.5f, 0.4f, 0.4f),
             8);
 
-        return new PhongWithTextureMaterial(device, lightPosition, lightSpectrum, reflectance, woodTexture, TextureUnit);
+        return new PhongWithTextureMaterial(device, lightPosition, lightSpectrum, reflectance, woodTexture);
     }
 }
