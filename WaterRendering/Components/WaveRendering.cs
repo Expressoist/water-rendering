@@ -34,6 +34,8 @@ public class WaveRendering : WaterRendering
     protected override void AddVertexAtPosition(float[] vertices, int x, int y, int index)
     {
         float z = CalculateWaveHeight(x, y);
+        z += CalculatePseudoRandomFactor(x, y);
+        
         vertices[index] = x;
         vertices[index + 1] = z;
         vertices[index + 2] = y;
@@ -42,17 +44,20 @@ public class WaveRendering : WaterRendering
     public float CalculateWaveHeight(float x, float y)
     {
         float omega = AngularWaveNumber * x - AngularFrequency * Time;
-        float z = WaveAmplitude * ((1 - 1 / 16f * WaveSteepness) * MathF.Cos(omega) +
+        return WaveAmplitude * ((1 - 1 / 16f * WaveSteepness) * MathF.Cos(omega) +
                                    1 / 2f * WaveSteepness * MathF.Cos(2 * omega) +
                                    3 / 8f * MathF.Pow(WaveSteepness, 2) * MathF.Cos(3 * omega));
+    }
 
-        float pseudoRandomX = 0.08f * MathF.Cos(0.5f * x - 0.06f * Time) 
+    private float CalculatePseudoRandomFactor(float x, float y)
+    {
+        float pseudoRandomX = 0.08f * MathF.Cos(0.5f * x - 0.06f * Time)
                               + 0.06f * MathF.Cos(2f * x - 0.04f * Time);
-        
-        float pseudoRandomY = 0.07f * MathF.Cos(0.7f * y - 0.07f * Time) 
-                              + 0.05f * MathF.Cos(1.6f * y - 0.04f * Time);
 
-        return z + pseudoRandomX + pseudoRandomY;
+        float pseudoRandomY = 0.07f * MathF.Cos(0.4f * y - 0.07f * Time)
+                        + 0.05f * MathF.Cos(1.8f * y - 0.04f * Time);
+        
+        return pseudoRandomX + pseudoRandomY;
     }
 
     public override void OnUpdateFrame()

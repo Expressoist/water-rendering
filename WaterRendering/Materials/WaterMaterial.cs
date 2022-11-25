@@ -15,8 +15,8 @@ public class WaterMaterial {
         
         var reflectance = new Reflectance(
             device.Color3(0.1f, 0.3f, 0.8f),
-            device.Color3(0f, 0.1f, 0.2f),
-            32);
+            device.Color3(0.8f, 0.8f, 0.8f),
+            24);
         
         return new AmbientMaterial(device, lightPosition, lightSpectrum, reflectance);
     }

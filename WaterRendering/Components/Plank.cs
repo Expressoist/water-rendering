@@ -35,18 +35,16 @@ public class Plank
     private static RenderObject CreateRenderObject(Device device, float scale, IVector2 translation, Color3 ambientColor, Point3 lightPosition)
     {
         var phongMaterial = GetMaterial(device, ambientColor, lightPosition);
-        //OpenGlMaterial uniformMaterial = new UniformMaterial(device, device.Color4(0.73f, 0.55f, 0.38f, 1f));
 
         var instance = device.Object
         (
-            //device.World,
             device.Model(),
             PlankInstanceName,
             phongMaterial,
-            Cube.Triangles,
+            Cube.SeparateTriangles,
             new VertexAttribute("positionIn", Cube.Vertices, 3),
-            new VertexAttribute("texCoordIn", Cube.Vertices, 3),
-            new VertexAttribute("normalIn", Cube.Vertices, 3)
+            new VertexAttribute("texCoordIn", Cube.TextureCoordinates, 2),
+            new VertexAttribute("normalIn", Cube.Normals, 3)
         );
 
         instance.Scale(scale);
@@ -60,7 +58,7 @@ public class Plank
         float b = waveRendering.CalculateWaveHeight(_endPosition.X, _endPosition.Y);
 
         float angle = MathF.Atan(b - a);
-        float height = (a + b) / 2;
+        float height = (a + b) / (2 * _scale);
 
         var translation = device.World.Vector3(_translation.X, height, _translation.Y);
 
@@ -71,8 +69,6 @@ public class Plank
 
     private static PhongWithTextureMaterial GetMaterial(Device device, Color3 ambientColor, Point3 lightPosition)
     {
-        //var woodMaterial = new FlatTextureMaterial(device, woodTexture, TextureUnit);
-
         TextureHandle woodTexture;
         using var image = Image.Load<Rgba32>(Path.Combine("Resources", "wooden_chest.jpg"));
         {

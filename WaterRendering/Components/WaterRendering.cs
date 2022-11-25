@@ -32,7 +32,7 @@ public abstract class WaterRendering : CameraRendering
     {
         Sky.AddToScene(device, Scene);
 
-        LightPosition = device.World.Point3(-20, 20, 20);
+        LightPosition = device.World.Point3(-60, 20, 60);
 
         // Light Point
         const int rings = 10;
