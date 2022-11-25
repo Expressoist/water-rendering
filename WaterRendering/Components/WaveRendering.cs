@@ -11,7 +11,7 @@ namespace WaterRendering.Components;
 
 public class WaveRendering : WaterRendering
 {
-    private readonly List<Plank> _floatingPlanks;
+    private readonly List<Box> _floatingPlanks;
 
     private const float WaveAmplitude = 1;
     private const float WaveLength = 50;
@@ -22,7 +22,7 @@ public class WaveRendering : WaterRendering
     public WaveRendering(Device device, IVector2 size, Camera camera)
         : base(device, size, camera)
     {
-        _floatingPlanks = new List<Plank>
+        _floatingPlanks = new List<Box>
         {
             new(device, 2f, device.World.Vector2(2, 2), AmbientColor, LightPosition),
             new(device, 1f, device.World.Vector2(-1, -1), AmbientColor, LightPosition)

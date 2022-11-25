@@ -11,7 +11,7 @@ using SixLabors.ImageSharp;
 
 namespace WaterRendering.Components;
 
-public class Plank
+public class Box
 {
     private const string PlankInstanceName = "Plank";
 
@@ -23,7 +23,7 @@ public class Plank
     private IVector2 _startPosition;
     private IVector2 _endPosition;
 
-    public Plank(Device device, float scale, IVector2 translation, Color3 ambientColor, Point3 lightPosition)
+    public Box(Device device, float scale, IVector2 translation, Color3 ambientColor, Point3 lightPosition)
     {
         _scale = scale;
         _translation = translation;
