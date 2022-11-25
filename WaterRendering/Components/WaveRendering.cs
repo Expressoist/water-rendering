@@ -9,9 +9,9 @@ public class WaveRendering : WaterRendering
 
     private const float WaveAmplitude = 1;
     private const float WaveLength = 50;
-    private const float AngularWaveNumber = 2 * MathF.PI / WaveLength;
-    private const float AngularFrequency = 0.02f;
-    private const float WaveSteepness = AngularWaveNumber * AngularFrequency;
+    private const float Frequency = 0.02f;
+    private const float WaveNumber = 2 * MathF.PI / WaveLength;
+
 
     public WaveRendering(Device device, IVector2 size, Camera camera)
         : base(device, size, camera)
@@ -37,10 +37,7 @@ public class WaveRendering : WaterRendering
 
     public float CalculateWaveHeight(float x, float y)
     {
-        float omega = AngularWaveNumber * x - AngularFrequency * Time;
-        return WaveAmplitude * ((1 - 1 / 16f * WaveSteepness) * MathF.Cos(omega) +
-                                   1 / 2f * WaveSteepness * MathF.Cos(2 * omega) +
-                                   3 / 8f * MathF.Pow(WaveSteepness, 2) * MathF.Cos(3 * omega));
+        return WaveAmplitude * MathF.Cos(WaveNumber * x - Frequency * Time);
     }
 
     private float CalculatePseudoRandomFactor(float x, float y)
