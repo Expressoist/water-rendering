@@ -7,11 +7,10 @@ public class WaveRendering : WaterRendering
 {
     private readonly List<Box> _floatingPlanks;
 
-    private const float WaveAmplitude = 1;
-    private const float WaveLength = 50;
+    private const float WaveAmplitude = 1.2f;
+    private const float WaveLength = 80;
     private const float Frequency = 0.02f;
     private const float WaveNumber = 2 * MathF.PI / WaveLength;
-
 
     public WaveRendering(Device device, IVector2 size, Camera camera)
         : base(device, size, camera)
@@ -25,7 +24,7 @@ public class WaveRendering : WaterRendering
         _floatingPlanks.ForEach(plank => Scene.Insert(1, plank.RenderObject)); // Really ugly fix
     }
 
-    protected override void AddVertexAtPosition(float[] vertices, int x, int y, int index)
+    protected override void AddVertexAtPosition(float[] vertices, float x, float y, int index)
     {
         float z = CalculateWaveHeight(x, y);
         z += CalculatePseudoRandomFactor(x, y);
@@ -42,13 +41,13 @@ public class WaveRendering : WaterRendering
 
     private float CalculatePseudoRandomFactor(float x, float y)
     {
-        float pseudoRandomX = 0.08f * MathF.Cos(0.5f * x - 0.06f * Time)
-                              + 0.06f * MathF.Cos(2f * x - 0.04f * Time);
-
-        float pseudoRandomY = 0.07f * MathF.Cos(0.4f * y - 0.07f * Time)
-                        + 0.05f * MathF.Cos(1.8f * y - 0.04f * Time);
+        float randomX = 0.05f * MathF.Cos(0.4f * x - Frequency * 1.5f * Time)
+                        + 0.05f * MathF.Cos(0.6f * x - Frequency * 2f * Time);
         
-        return pseudoRandomX + pseudoRandomY;
+        float randomY = 0.05f * MathF.Cos(0.3f * y + Frequency * 1.5f * Time)
+                        + 0.05f * MathF.Cos(0.5f * y + Frequency * 2f * Time);
+
+        return randomX + randomY;
     }
 
     public override void OnUpdateFrame()

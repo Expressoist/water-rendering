@@ -18,11 +18,11 @@ public abstract class WaterRendering : CameraRendering
     private readonly OtkRenderObject _surfaceInstance;
     private readonly Device _device;
     
-    private const int NumberOfSubdivisions = 60;
+    private const int NumberOfSubdivisions = 80;
     private const int NumberOfPoints = NumberOfSubdivisions + 1;
     private const int NumberOfSquares = NumberOfSubdivisions * NumberOfSubdivisions;
 
-    private const int SurfaceScaleFactor = 2;
+    private const float SurfaceScaleFactor = 1.4f;
     private const string SurfaceInstanceName = "WaterRender";
     private const float SmallScale = 0.8f;
     
@@ -146,7 +146,7 @@ public abstract class WaterRendering : CameraRendering
         }
     }
 
-    protected abstract void AddVertexAtPosition(float[] vertices, int x, int y, int index);
+    protected abstract void AddVertexAtPosition(float[] vertices, float x, float y, int index);
 
     public override void OnUpdateFrame()
     {
