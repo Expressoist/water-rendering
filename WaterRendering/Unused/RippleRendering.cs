@@ -1,4 +1,3 @@
-using System.Collections;
 using SharpGfx;
 using SharpGfx.Geometry;
 using SharpGfx.OpenGL.Shading;

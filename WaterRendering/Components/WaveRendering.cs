@@ -1,10 +1,4 @@
-using System.Collections;
-using System.Collections.Concurrent;
-using OpenTK.Mathematics;
 using SharpGfx;
-using SharpGfx.Host;
-using SharpGfx.OpenGL.Shading;
-using SharpGfx.OpenTK;
 using SharpGfx.Primitives;
 
 namespace WaterRendering.Components;

@@ -1,7 +1,3 @@
-using System.Data.Common;
-using System.Drawing;
-using System.Net.NetworkInformation;
-using OpenTK.Mathematics;
 using SharpGfx;
 using SharpGfx.Geometry;
 using SharpGfx.OpenGL.Shading;

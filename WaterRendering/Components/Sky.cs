@@ -3,7 +3,6 @@ using SharpGfx.Geometry;
 using SharpGfx.OpenGL.Shading;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp;
-using SixLabors.ImageSharp.PixelFormats;
 
 namespace WaterRendering.Components;
 

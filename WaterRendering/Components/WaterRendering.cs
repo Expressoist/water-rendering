@@ -1,4 +1,3 @@
-using OpenTK.Compute.OpenCL;
 using SharpGfx;
 using SharpGfx.Geometry;
 using SharpGfx.OpenGL.Shading;
