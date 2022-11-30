@@ -55,7 +55,7 @@ public abstract class WaterRendering : CameraRendering
         Normals = CalculateNormals(device.World, Faces, Vertices);
 
         var waterMaterial = WaterMaterial.Create(device, AmbientColor, LightPosition);
-        var waterReflectingTextureMaterial = new WaterReflectingTextureMaterial(device);
+        //var waterReflectingTextureMaterial = new WaterReflectingTextureMaterial(device);
         
         _surfaceInstance = (OtkRenderObject) Device.Object
         (
