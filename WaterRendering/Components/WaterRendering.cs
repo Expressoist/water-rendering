@@ -54,15 +54,28 @@ public abstract class WaterRendering : CameraRendering
         Faces = CalculateFaces(NumberOfSubdivisions);
         Normals = CalculateNormals(device.World, Faces, Vertices);
 
+        var waterMaterial = WaterMaterial.Create(device, AmbientColor, LightPosition);
+        var waterReflectingTextureMaterial = new WaterReflectingTextureMaterial(device);
+        
         _surfaceInstance = (OtkRenderObject) Device.Object
         (
             device.World,
             SurfaceInstanceName,
-            WaterMaterial.Create(device, AmbientColor, LightPosition),
+            waterMaterial,
             CalculateFaces(NumberOfSubdivisions),
             new VertexAttribute("positionIn", Vertices, 3),
             new VertexAttribute("normalIn", Normals, 3)
         );
+        
+        // _surfaceInstance = (OtkRenderObject) Device.Object
+        // (
+        //     device.World,
+        //     SurfaceInstanceName,
+        //     waterReflectingTextureMaterial,
+        //     CalculateFaces(NumberOfSubdivisions),
+        //     new VertexAttribute("positionIn", Vertices, 3),
+        //     new VertexAttribute("normalIn", Normals, 3)
+        // );
         
         Scene.Add(_surfaceInstance);
     }

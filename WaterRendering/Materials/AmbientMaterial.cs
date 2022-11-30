@@ -7,6 +7,7 @@ namespace WaterRendering.Components;
 
 public class AmbientMaterial : OpenGlMaterial
 {
+    // TODO rename material and clean up
      private const string FragShader = @"
           #version 410
 
