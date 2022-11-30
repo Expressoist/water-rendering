@@ -14,6 +14,7 @@ public abstract class WaterRendering : CameraRendering
     private float[] Vertices { get; } = new float[NumberOfPoints * NumberOfPoints * 3];
     private uint[] Faces { get; } = new uint[NumberOfSquares * 6];
     private float[] Normals { get; } = new float[NumberOfPoints * NumberOfPoints * 3];
+    private float[] TextureCoordinates { get; } = new float[NumberOfPoints * NumberOfPoints * 2];
     
     private readonly OtkRenderObject _surfaceInstance;
     private readonly Device _device;
@@ -53,6 +54,7 @@ public abstract class WaterRendering : CameraRendering
         CalculateVertices(Vertices);
         CalculateFaces(Faces);
         CalculateNormals(device.World, Faces, Vertices, Normals);
+        CalculateTextureCoordinates(TextureCoordinates);
 
         _surfaceInstance = (OtkRenderObject) Device.Object
         (
@@ -61,12 +63,25 @@ public abstract class WaterRendering : CameraRendering
             WaterMaterial.Create(device, AmbientColor, LightPosition),
             Faces,
             new VertexAttribute("positionIn", Vertices, 3),
+            new VertexAttribute("texCoordIn", TextureCoordinates, 2),
             new VertexAttribute("normalIn", Normals, 3)
         );
         
         Scene.Add(_surfaceInstance);
     }
 
+    private void CalculateTextureCoordinates(float[] outArray)
+    {
+        for (int x = 0; x <= NumberOfSubdivisions; x++)
+        {
+            for (int y = 0; y <= NumberOfSubdivisions; y++)
+            {
+                int index = 2 * (y + NumberOfPoints * x);
+                outArray[index] = (float) x / (float) NumberOfSubdivisions;
+                outArray[index + 1] = (float) y / (float) NumberOfSubdivisions;
+            }
+        }
+    }
 
     private void CalculateNormals(Space space, uint[] faces, float[] vertices, float[] outArray)
     {
@@ -157,6 +172,7 @@ public abstract class WaterRendering : CameraRendering
         CalculateNormals(_device.World, Faces, Vertices, Normals);
         _surfaceInstance.UpdateVertices(
             new VertexAttribute("positionIn", Vertices, 3),
+            new VertexAttribute("texCoordIn", TextureCoordinates, 2),
             new VertexAttribute("normalIn", Normals, 3));
     }
 }

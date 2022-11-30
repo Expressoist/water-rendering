@@ -28,7 +28,7 @@ public class WaveRendering : WaterRendering
     {
         float z = CalculateWaveHeight(x, y);
         z += CalculatePseudoRandomFactor(x, y);
-        
+
         vertices[index] = x;
         vertices[index + 1] = z;
         vertices[index + 2] = y;

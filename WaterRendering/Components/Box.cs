@@ -61,7 +61,7 @@ public class Box
                                  device.World.Scale4(_scale);
     }
 
-    private static PhongWithTextureMaterial GetMaterial(Device device, Color3 ambientColor, Point3 lightPosition)
+    public static PhongWithTextureMaterial GetMaterial(Device device, Color3 ambientColor, Point3 lightPosition)
     {
         using var image = Image.Load<Rgba32>(Texture);
         TextureHandle woodTexture = device.Texture(image);

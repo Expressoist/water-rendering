@@ -21,24 +21,29 @@
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <None Remove="Resources\earthmap.jpg" />
-      <Content Include="Resources\earthmap.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
       <None Remove="Resources\sky1.jpg" />
       <Content Include="Resources\sky1.jpg">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </Content>
       <None Remove="Resources\milky-way-galaxy-night.jpg" />
-      <Content Include="Resources\milky-way-galaxy-night.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
       <None Remove="Resources\table.jpg" />
-      <Content Include="Resources\table.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
       <None Remove="Resources\wooden_chest.jpg" />
       <Content Include="Resources\wooden_chest.jpg">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Resources\gradient.jpg" />
+      <None Remove="Resources\autumn-leaves.png" />
+      <None Remove="Resources\water-texture.png" />
+      <Content Include="Resources\water-texture.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Resources\water-texture.jpg" />
+      <Content Include="Resources\water-texture.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Resources\water-texture-2.png" />
+      <Content Include="Resources\water-texture-2.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
     </ItemGroup>
 
