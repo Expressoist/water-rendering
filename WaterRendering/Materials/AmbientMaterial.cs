@@ -1,5 +1,4 @@
-﻿using System.Numerics;
-using SharpGfx;
+﻿using SharpGfx;
 using SharpGfx.OpenGL.Shading;
 using SharpGfx.Primitives;
 

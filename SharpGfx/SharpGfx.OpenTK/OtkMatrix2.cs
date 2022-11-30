@@ -1,5 +1,4 @@
-﻿using System;
-using SharpGfx.Primitives;
+﻿using SharpGfx.Primitives;
 
 namespace SharpGfx.OpenTK
 {

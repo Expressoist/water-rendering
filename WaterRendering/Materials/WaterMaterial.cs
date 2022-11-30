@@ -1,13 +1,20 @@
 using SharpGfx;
 using SharpGfx.OpenGL.Shading;
 using SharpGfx.Primitives;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
 
 namespace WaterRendering.Components;
 
 public class WaterMaterial {
 
-    public static AmbientMaterial Create(Device device, Color3 ambientColor, Point3 lightPosition)
+    public static Material Create(Device device, Color3 ambientColor, Point3 lightPosition)
     {
+        
+        string texture = Path.Combine("Resources", "water-texture-2.png");
+        using var image = Image.Load<Rgba32>(texture);
+        TextureHandle woodTexture = device.Texture(image);
+    
         var lightSpectrum = new Light(
             ambientColor,
             device.Color3(1f, 1f, 1f),
@@ -15,9 +22,9 @@ public class WaterMaterial {
         
         var reflectance = new Reflectance(
             device.Color3(0.1f, 0.3f, 0.8f),
-            device.Color3(0f, 0.1f, 0.2f),
-            32);
+            device.Color3(0.8f, 0.8f, 0.8f),
+            24);
         
-        return new AmbientMaterial(device, lightPosition, lightSpectrum, reflectance);
+        return new PhongWithTextureMaterial(device, lightPosition, lightSpectrum, reflectance, woodTexture);
     }
 }
