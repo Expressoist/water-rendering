@@ -11,10 +11,10 @@ public static class Sky
     const int Resolution = 32;
     const int TextureUnit = 0;
     
-    public static void AddToScene(Device device, List<RenderObject> scene)
+    public static RenderObject Create(Device device)
     {
         TextureHandle texture;
-        using (var image = Image.Load<Rgba32>(Path.Combine("Resources", "sky1.jpg")))
+        using (var image = Image.Load<Rgba32>(Path.Combine("Resources", "sky2.jpg")))
         {
             texture = device.Texture(image);
         }
@@ -27,9 +27,9 @@ public static class Sky
             Sphere.GetTriangles(Resolution, Resolution),
             new VertexAttribute("positionIn", Sphere.GetVertices(Resolution, Resolution), 3),
             new VertexAttribute("texCoordIn", GetTextureCoordinates(Resolution, Resolution), 2)
-        ).Scale(55).RotateX(MathF.PI / 2);
-        
-        scene.Add(skySphere);
+        ).Scale(55).RotateX(MathF.PI / 2).Translate(device.World.Vector3(0,-2,0));
+
+        return skySphere;
     }
     
     private static float[] GetTextureCoordinates(int longitudeCount, int latitudeCount)

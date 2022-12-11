@@ -37,19 +37,25 @@ public class PhongWithTextureMaterial : OpenGlMaterial
 
             void main()
             {
-	            vec3 ambient = vec3(0.5, 0.5, 0.5);
+	            vec3 ambient = vec3(0.6, 0.6, 0.6);
 
 	            vec3 normDir = normalize(normal);
 	            vec3 lightDir = normalize(light.position - fragPos); 
-                float cosTheta = max(dot(normDir, lightDir), 0.0);
-	            vec3 diffuse = cosTheta * light.diffuse * material.diffuse;
-
                 vec3 cameraDir = normalize(cameraPosition - fragPos);
-                vec3 reflectDir = reflect(-lightDir, normDir);
-                float intensity = pow(max(dot(cameraDir, reflectDir), 0.0), material.shininess);
-                vec3 specular = intensity * light.specular * material.specular;
 
-                fragColor = vec4(ambient + diffuse + specular, 1.0) * texture(texUnit, texCoord);
+	            vec3 halfwayDir = normalize(lightDir - cameraDir);
+                float cosTheta = max(dot(normDir, halfwayDir), 0.0);
+
+	            vec3 diffuse = cosTheta * light.diffuse;
+
+                vec3 reflectDir = reflect(-lightDir, normDir);
+
+                float intensity = pow(max(dot(cameraDir, reflectDir), 0.0), material.shininess);
+                vec3 specular = intensity * light.specular;
+
+                vec4 color = normalize(vec4(ambient + diffuse + specular, 1.0) * texture(texUnit, texCoord));
+                color[3] = texture(texUnit, texCoord)[3];
+                fragColor = color;
             }";
 
     private static readonly string PhongWithTextureVertexShader = Resources.GetSource("texture_normal_lighting.vert");

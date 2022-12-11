@@ -45,6 +45,10 @@
       <Content Include="Resources\water-texture-2.png">
         <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       </Content>
+      <None Remove="Resources\sky2.jpg" />
+      <Content Include="Resources\sky2.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
 
 </Project>

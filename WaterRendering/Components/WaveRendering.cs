@@ -18,7 +18,7 @@ public class WaveRendering : WaterRendering
         _floatingPlanks = new List<Box>
         {
             new(device, 2f, device.World.Vector2(2, 2), AmbientColor, LightPosition),
-            new(device, 1f, device.World.Vector2(-1, -1), AmbientColor, LightPosition)
+            new(device, 1f, device.World.Vector2(-2f, -2f), AmbientColor, LightPosition)
         };
         
         _floatingPlanks.ForEach(plank => Scene.Insert(1, plank.RenderObject)); // Really ugly fix

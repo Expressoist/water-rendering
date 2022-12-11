@@ -3,6 +3,7 @@ using SharpGfx.Geometry;
 using SharpGfx.OpenGL.Shading;
 using SharpGfx.OpenTK;
 using SharpGfx.Primitives;
+using SixLabors.ImageSharp.Processing;
 
 namespace WaterRendering.Components;
 
@@ -17,6 +18,7 @@ public abstract class WaterRendering : CameraRendering
     private float[] TextureCoordinates { get; } = new float[NumberOfPoints * NumberOfPoints * 2];
     
     private readonly OtkRenderObject _surfaceInstance;
+    private readonly RenderObject _skyBox;
     private readonly Device _device;
     
     private const int NumberOfSubdivisions = 80;
@@ -30,7 +32,8 @@ public abstract class WaterRendering : CameraRendering
     protected WaterRendering(Device device, IVector2 size, Camera camera)
         : base(device, size, device.Color3(0.16f, 0.50f, 0.72f), camera)
     {
-        Sky.AddToScene(device, Scene);
+        _skyBox = Sky.Create(device);
+        Scene.Add(_skyBox);
 
         LightPosition = device.World.Point3(-60, 20, 60);
 
@@ -174,5 +177,7 @@ public abstract class WaterRendering : CameraRendering
             new VertexAttribute("positionIn", Vertices, 3),
             new VertexAttribute("texCoordIn", TextureCoordinates, 2),
             new VertexAttribute("normalIn", Normals, 3));
+
+        _skyBox.RotateY(-0.0003f);
     }
 }
