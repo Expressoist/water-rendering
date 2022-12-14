@@ -45,17 +45,17 @@ public class Box
         renderObject.Translate(device.World.Vector3(translation.X, 0, translation.X));
         return renderObject;
     }
-
-    public void UpdateFloatingTransformation(Device device, WaveRendering waveRendering)
+    
+    public void UpdateFloatingTransformation(Device device, WaterRendering waveRendering)
     {
         float a = waveRendering.CalculateWaveHeight(_startPosition.X, _startPosition.Y);
         float b = waveRendering.CalculateWaveHeight(_endPosition.X, _endPosition.Y);
-
+    
         float angle = MathF.Atan(b - a);
         float height = (a + b) / (2 * _scale);
-
+    
         var translation = device.World.Vector3(_translation.X, height, _translation.Y);
-
+    
         RenderObject.Transform = device.World.RotationZ4(angle) *
                                  device.World.Translation4(translation) *
                                  device.World.Scale4(_scale);

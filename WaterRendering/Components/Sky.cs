@@ -8,9 +8,10 @@ namespace WaterRendering.Components;
 
 public static class Sky
 {
+    private const string InstanceName = "Sky";
     const int Resolution = 32;
     const int TextureUnit = 0;
-    
+
     public static RenderObject Create(Device device)
     {
         TextureHandle texture;
@@ -21,17 +22,20 @@ public static class Sky
 
         var skyMaterial = new FlatTextureMaterial(device, texture, TextureUnit);
         var skySphere = device.Object(
-            device.World,
-            "sky",
-            skyMaterial,
-            Sphere.GetTriangles(Resolution, Resolution),
-            new VertexAttribute("positionIn", Sphere.GetVertices(Resolution, Resolution), 3),
-            new VertexAttribute("texCoordIn", GetTextureCoordinates(Resolution, Resolution), 2)
-        ).Scale(55).RotateX(MathF.PI / 2).Translate(device.World.Vector3(0,-2,0));
+                device.World,
+                InstanceName,
+                skyMaterial,
+                Sphere.GetTriangles(Resolution, Resolution),
+                new VertexAttribute("positionIn", Sphere.GetVertices(Resolution, Resolution), 3),
+                new VertexAttribute("texCoordIn", GetTextureCoordinates(Resolution, Resolution), 2)
+            )
+            .Scale(55)
+            .RotateX(MathF.PI / 2)
+            .Translate(device.World.Vector3(0, -2, 0));
 
         return skySphere;
     }
-    
+
     private static float[] GetTextureCoordinates(int longitudeCount, int latitudeCount)
     {
         var vertices = new float[(longitudeCount + 1) * (latitudeCount + 1) * 2];
