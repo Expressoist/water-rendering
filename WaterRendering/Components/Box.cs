@@ -46,10 +46,10 @@ public class Box
         return renderObject;
     }
     
-    public void UpdateFloatingTransformation(Device device, WaterRendering waveRendering)
+    public void UpdateFloatingTransformation(Device device, SceneRendering seceneRendering)
     {
-        float a = waveRendering.CalculateWaveHeight(_startPosition.X, _startPosition.Y);
-        float b = waveRendering.CalculateWaveHeight(_endPosition.X, _endPosition.Y);
+        float a = seceneRendering.CalculateWaveHeight(_startPosition.X, _startPosition.Y);
+        float b = seceneRendering.CalculateWaveHeight(_endPosition.X, _endPosition.Y);
     
         float angle = MathF.Atan(b - a);
         float height = (a + b) / (2 * _scale);
@@ -61,7 +61,7 @@ public class Box
                                  device.World.Scale4(_scale);
     }
 
-    public static PhongWithTextureMaterial GetMaterial(Device device, Color3 ambientColor, Point3 lightPosition)
+    private static PhongWithTextureMaterial GetMaterial(Device device, Color3 ambientColor, Point3 lightPosition)
     {
         using var image = Image.Load<Rgba32>(Texture);
         TextureHandle woodTexture = device.Texture(image);

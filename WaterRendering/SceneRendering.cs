@@ -3,10 +3,11 @@ using SharpGfx.Geometry;
 using SharpGfx.OpenGL.Shading;
 using SharpGfx.OpenTK;
 using SharpGfx.Primitives;
+using WaterRendering.Components;
 
-namespace WaterRendering.Components;
+namespace WaterRendering;
 
-public class WaterRendering : CameraRendering
+public class SceneRendering : CameraRendering
 {
     private readonly List<Box> _floatingBoxes;
     private readonly OtkRenderObject _water;
@@ -20,7 +21,7 @@ public class WaterRendering : CameraRendering
     private const float WaveNumber = 2 * MathF.PI / WaveLength;
     private const float SmallScale = 0.8f;
     
-    public WaterRendering(Device device, IVector2 size, Camera camera)
+    public SceneRendering(Device device, IVector2 size, Camera camera)
         : base(device, size, device.Color3(0.16f, 0.50f, 0.72f), camera)
     {
         var lightPosition = device.World.Point3(-60, 20, 60);
