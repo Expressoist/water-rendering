@@ -10,22 +10,22 @@ namespace WaterRendering;
 public class SceneRendering : CameraRendering
 {
     private readonly List<Box> _floatingBoxes;
-    private readonly OtkRenderObject _water;
+    private readonly Water _water;
     private readonly RenderObject _skyBox;
     private readonly Device _device;
     private int _time;
-    
+
     private const float WaveAmplitude = 1.2f;
     private const float WaveLength = 80;
     private const float Frequency = 0.02f;
     private const float WaveNumber = 2 * MathF.PI / WaveLength;
     private const float SmallScale = 0.8f;
-    
+
     public SceneRendering(Device device, IVector2 size, Camera camera)
         : base(device, size, device.Color3(0.16f, 0.50f, 0.72f), camera)
     {
         var lightPosition = device.World.Point3(-60, 20, 60);
-        
+
         _device = device;
         _skyBox = Sky.Create(device);
         _water = Water.Create(device, AmbientColor, lightPosition, _time);
@@ -39,7 +39,7 @@ public class SceneRendering : CameraRendering
         const int rings = 10;
         var lightVertices = Sphere.GetIsoVertices(rings);
         var lightMaterial = new UniformMaterial(device, device.Color4(1f, 1f, 1f, 1f));
-        
+
         var light = device.Object(
                 device.Model(),
                 "light",
@@ -52,8 +52,8 @@ public class SceneRendering : CameraRendering
         // Add components to scene
         Scene.Add(_skyBox);
         Scene.Add(light);
-        Scene.Add(_water);
-        _floatingBoxes.ForEach(box => Scene.Insert(1, box.RenderObject)); // Really ugly fix
+        _floatingBoxes.ForEach(box => Scene.Add(box.RenderObject));
+        Scene.Add(_water.RenderObject);
     }
 
     public override void OnUpdateFrame()
@@ -61,13 +61,12 @@ public class SceneRendering : CameraRendering
         base.OnUpdateFrame();
 
         _time++;
-        
-        Water.Update(_device, _water, _time);
 
+        _water.Update(_device, _time);
         _skyBox.RotateY(-0.0003f);
         _floatingBoxes.ForEach(box => box.UpdateFloatingTransformation(Device, this));
     }
-    
+
     public float CalculateWaveHeight(float x, float y)
     {
         return WaveAmplitude * MathF.Cos(WaveNumber * x - Frequency * _time);

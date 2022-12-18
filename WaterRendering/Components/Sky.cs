@@ -9,13 +9,13 @@ namespace WaterRendering.Components;
 public static class Sky
 {
     private const string InstanceName = "Sky";
-    const int Resolution = 32;
-    const int TextureUnit = 0;
+    private const int Resolution = 32;
+    private const int TextureUnit = 0;
 
     public static RenderObject Create(Device device)
     {
         TextureHandle texture;
-        using (var image = Image.Load<Rgba32>(Path.Combine("Resources", "sky2.jpg")))
+        using (var image = Image.Load<Rgba32>(Path.Combine("Resources", "sky_texture.jpg")))
         {
             texture = device.Texture(image);
         }
@@ -39,18 +39,14 @@ public static class Sky
     private static float[] GetTextureCoordinates(int longitudeCount, int latitudeCount)
     {
         var vertices = new float[(longitudeCount + 1) * (latitudeCount + 1) * 2];
-
         float lngStep = 1f / longitudeCount;
         float latStep = 1f / latitudeCount;
-
-        int i = 0;
+        var i = 0;
         float latitude = 0;
-        for (int lat = 0; lat <= latitudeCount; lat++)
+        for (var lat = 0; lat <= latitudeCount; lat++)
         {
-            // add (sectorCount+1) vertices per stack
-            // the first and last vertices have same position and normal, but different tex coords
             float longitude = 0;
-            for (int lng = 0; lng <= longitudeCount; lng++)
+            for (var lng = 0; lng <= longitudeCount; lng++)
             {
                 vertices[i++] = longitude;
                 vertices[i++] = latitude;

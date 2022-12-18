@@ -2,9 +2,9 @@
 using SharpGfx.OpenGL.Shading;
 using SharpGfx.Primitives;
 
-namespace WaterRendering.Components;
+namespace WaterRendering.Materials;
 
-public class PhongWithTextureMaterial : OpenGlMaterial
+public class PhongTextureMaterial : OpenGlMaterial
 {
     private const string PhongFragWithTextureFragShader = @"
           #version 410
@@ -61,24 +61,24 @@ public class PhongWithTextureMaterial : OpenGlMaterial
     private static readonly string PhongWithTextureVertexShader = Resources.GetSource("texture_normal_lighting.vert");
     private readonly TextureHandle _handle;
     private readonly int _unit;
-    
-    public PhongWithTextureMaterial(
-        Device device, 
+
+    public PhongTextureMaterial(
+        Device device,
         Point3 lightPosition,
         Light light,
         Reflectance reflectance,
         TextureHandle handle,
         int unit = 0)
         : base(
-            device, 
-            PhongWithTextureVertexShader, 
+            device,
+            PhongWithTextureVertexShader,
             PhongFragWithTextureFragShader)
     {
         _unit = unit;
         _handle = handle;
-        
+
         Transparent = true;
-         
+
         // all variables with 'uniform' in the FragShader need to be passed here
         DoInContext(() =>
         {
@@ -92,7 +92,7 @@ public class PhongWithTextureMaterial : OpenGlMaterial
             Set("texUnit", _unit);
         });
     }
-    
+
     public override void Apply()
     {
         _handle.ActivateTexture(_unit);
