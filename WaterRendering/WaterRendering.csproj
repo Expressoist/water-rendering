@@ -11,40 +11,20 @@
       <ProjectReference Include="..\SharpGfx\SharpGfx.OpenTK\SharpGfx.OpenTK.csproj" />
       <ProjectReference Include="..\SharpGfx\SharpGfx\SharpGfx.csproj" />
     </ItemGroup>
-    
-    <ItemGroup>
-      <None Remove="Components\Resources\blue-clear.jpg" />
-    </ItemGroup>
-    
-    <ItemGroup>
-      <Content Include="Resources\blue-clear.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <None Remove="Resources\earthmap.jpg" />
-      <None Remove="Resources\sky1.jpg" />
-      <Content Include="Resources\sky1.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <None Remove="Resources\milky-way-galaxy-night.jpg" />
-      <None Remove="Resources\table.jpg" />
-      <None Remove="Resources\wooden_chest.jpg" />
-      <Content Include="Resources\wooden_chest.jpg">
-        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      </Content>
-      <None Remove="Resources\gradient.jpg" />
-      <None Remove="Resources\autumn-leaves.png" />
-      <None Remove="Resources\water-texture.png" />
-      <Content Include="Resources\water-texture.png">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <None Remove="Resources\water-texture.jpg" />
-      <Content Include="Resources\water-texture.jpg">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-      <None Remove="Resources\water-texture-2.png" />
-      <Content Include="Resources\water-texture-2.png">
-        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      </Content>
-    </ItemGroup>
 
+    <ItemGroup>
+      <None Remove="Resources\sky_texture.jpg" />
+      <Content Include="Resources\sky_texture.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Resources\water_texture.png" />
+      <Content Include="Resources\water_texture.png">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <None Remove="Resources\wood_texture.jpg" />
+      <Content Include="Resources\wood_texture.jpg">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+    </ItemGroup>
+    
 </Project>

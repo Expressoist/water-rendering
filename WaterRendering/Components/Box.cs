@@ -4,6 +4,7 @@ using SharpGfx.OpenGL.Shading;
 using SharpGfx.Primitives;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp;
+using WaterRendering.Materials;
 
 namespace WaterRendering.Components;
 
@@ -12,13 +13,13 @@ public class Box
     private const string PlankInstanceName = "Plank";
 
     public readonly RenderObject RenderObject;
-    
+
     private readonly float _scale;
     private readonly IVector2 _translation;
     private readonly IVector2 _startPosition;
     private readonly IVector2 _endPosition;
-    
-    private static readonly string Texture = Path.Combine("Resources", "wooden_chest.jpg");
+
+    private static readonly string Texture = Path.Combine("Resources", "wood_texture.jpg");
 
     public Box(Device device, float scale, IVector2 translation, Color3 ambientColor, Point3 lightPosition)
     {
@@ -29,7 +30,8 @@ public class Box
         RenderObject = CreateRenderObject(device, scale, translation, ambientColor, lightPosition);
     }
 
-    private static RenderObject CreateRenderObject(Device device, float scale, IVector2 translation, Color3 ambientColor, Point3 lightPosition)
+    private static RenderObject CreateRenderObject(Device device, float scale, IVector2 translation,
+        Color3 ambientColor, Point3 lightPosition)
     {
         var renderObject = device.Object
         (
@@ -46,10 +48,10 @@ public class Box
         return renderObject;
     }
 
-    public void UpdateFloatingTransformation(Device device, WaveRendering waveRendering)
+    public void UpdateFloatingTransformation(Device device, SceneRendering seceneRendering)
     {
-        float a = waveRendering.CalculateWaveHeight(_startPosition.X, _startPosition.Y);
-        float b = waveRendering.CalculateWaveHeight(_endPosition.X, _endPosition.Y);
+        float a = seceneRendering.CalculateWaveHeight(_startPosition.X, _startPosition.Y);
+        float b = seceneRendering.CalculateWaveHeight(_endPosition.X, _endPosition.Y);
 
         float angle = MathF.Atan(b - a);
         float height = (a + b) / (2 * _scale);
@@ -61,11 +63,11 @@ public class Box
                                  device.World.Scale4(_scale);
     }
 
-    public static PhongWithTextureMaterial GetMaterial(Device device, Color3 ambientColor, Point3 lightPosition)
+    private static Material GetMaterial(Device device, Color3 ambientColor, Point3 lightPosition)
     {
         using var image = Image.Load<Rgba32>(Texture);
         TextureHandle woodTexture = device.Texture(image);
-        
+
         var lightSpectrum = new Light(
             ambientColor,
             device.Color3(0.45f, 0.65f, 0.80f),
@@ -76,6 +78,6 @@ public class Box
             device.Color3(0.5f, 0.4f, 0.4f),
             8);
 
-        return new PhongWithTextureMaterial(device, lightPosition, lightSpectrum, reflectance, woodTexture);
+        return new PhongTextureMaterial(device, lightPosition, lightSpectrum, reflectance, woodTexture);
     }
 }
