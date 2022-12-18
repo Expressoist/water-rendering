@@ -11,9 +11,9 @@ public class WaterMaterial {
     public static Material Create(Device device, Color3 ambientColor, Point3 lightPosition)
     {
         
-        string texture = Path.Combine("Resources", "water-texture-2.png");
-        using var image = Image.Load<Rgba32>(texture);
-        TextureHandle woodTexture = device.Texture(image);
+        string texturePath = Path.Combine("Resources", "water-texture-2.png");
+        using var image = Image.Load<Rgba32>(texturePath);
+        TextureHandle texture = device.Texture(image);
     
         var lightSpectrum = new Light(
             ambientColor,
@@ -25,6 +25,6 @@ public class WaterMaterial {
             device.Color3(0.8f, 0.8f, 0.8f),
             24);
         
-        return new PhongWithTextureMaterial(device, lightPosition, lightSpectrum, reflectance, woodTexture);
+        return new PhongWithTextureMaterial(device, lightPosition, lightSpectrum, reflectance, texture);
     }
 }
